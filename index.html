@@ -36,6 +36,7 @@ header.top{padding:18px var(--gutter) 10px;display:flex;align-items:flex-start;j
 header.top h1{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.05;margin:0}
 header.top h1 em{font-style:italic;color:var(--teal)}
 header.top .sub{color:var(--slate);font-size:13px;margin-top:4px}
+header.top .sub.mono{font-size:11.5px;margin-top:2px}
 .pill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--hair);color:var(--slate);background:var(--card);white-space:nowrap}
 .reset{font-size:13px;color:var(--slate);text-decoration:underline;text-underline-offset:3px;margin-top:6px}
 .reset:hover{color:var(--ink)}
@@ -103,7 +104,30 @@ header.top .sub{color:var(--slate);font-size:13px;margin-top:4px}
 .check .ok{color:var(--teal);font-weight:600}
 .check .warn{color:var(--amber);font-weight:600}
 
-.tabs{display:flex;gap:6px;margin-bottom:8px}
+.tabrow{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px;flex-wrap:wrap}
+.tabs{display:flex;gap:6px}
+.cap{font-family:var(--mono);font-size:11px;color:var(--slate)}
+/* channel frames */
+.frame{border-radius:12px;overflow:hidden}
+.frame-head{font-family:var(--mono);font-size:11.5px;color:var(--slate);line-height:1.6}
+.frame-head b{color:var(--ink);font-weight:500}
+.frame-foot{font-family:var(--mono);font-size:11px;color:var(--slate);margin-top:8px}
+.frame.email{border:1px solid var(--hair);background:var(--card)}
+.frame.email .frame-head{padding:10px 12px;border-bottom:1px solid var(--hair);background:var(--porcelain)}
+.frame.email .frame-body{padding:12px}
+.frame.email .frame-foot{border-top:1px dashed var(--hair);padding-top:8px}
+.frame.chat{background:var(--porcelain);border:1px solid var(--hair);padding:12px 12px 12px 36px}
+.frame.chat .frame-head{margin-bottom:8px;text-align:right}
+.frame.chat .frame-body{position:relative;background:var(--teal-soft);border:1px solid #C9D9DD;border-radius:16px 16px 4px 16px;padding:10px 12px}
+.frame.chat .frame-body::after{content:"";position:absolute;right:-1px;bottom:-1px;width:12px;height:12px;background:var(--teal-soft);border-right:1px solid #C9D9DD;border-bottom:1px solid #C9D9DD;clip-path:polygon(100% 0,100% 100%,0 100%)}
+.frame.chat .reply{font-size:16.5px}
+.frame.chat .frame-foot{text-align:right;margin-top:4px}
+.frame.thread{border:1px solid var(--hair);background:var(--card)}
+.frame.thread .frame-head{padding:10px 12px;border-bottom:1px solid var(--hair);background:var(--porcelain);display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 12px}
+.frame.thread .frame-body{padding:12px}
+.bubble-head{font-family:var(--mono);font-size:11px;color:var(--slate);line-height:1.6;margin-bottom:6px;padding-bottom:6px;border-bottom:1px solid var(--hair)}
+.bubble.email{border-radius:12px}
+.bubble.thread{border-radius:12px}
 .tab{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--hair);color:var(--slate)}
 .tab[aria-selected="true"]{background:var(--ink);color:var(--porcelain);border-color:var(--ink)}
 .reply{font-family:var(--display);font-size:17.5px;line-height:1.4;white-space:pre-line}
@@ -158,7 +182,8 @@ footer a{color:var(--teal)}
 <header class="top">
   <div>
     <h1>Casa <em>Miradouro</em></h1>
-    <div class="sub">Front desk · Alfama, Lisboa · 6 rooms · Wed 17 Sep</div>
+    <div class="sub">Owner's view — the loop answers, you watch</div>
+    <div class="sub mono">Alfama, Lisboa · 6 rooms · Wed 17 Sep</div>
   </div>
   <div style="text-align:right">
     <span class="pill">Demo · fictional data</span><br>
@@ -196,7 +221,7 @@ footer a{color:var(--teal)}
         <div class="avatar" id="d-avatar"></div>
         <div><div class="who" id="d-who"></div><div class="chan" id="d-chan"></div></div>
       </div>
-      <div class="bubble"><div id="d-text"></div><div class="t" id="d-time"></div></div>
+      <div class="bubble" id="bubble"><div class="bubble-head" id="d-head" hidden></div><div id="d-text"></div><div class="t" id="d-time"></div></div>
       <div class="steps">
         <div class="step" id="s-verify">
           <div class="lab"><b>1 · Verify booking</b><span class="ms" id="v-ms"><span class="spin"></span> looking up</span></div>
@@ -205,12 +230,18 @@ footer a{color:var(--teal)}
         </div>
         <div class="step" id="s-draft">
           <div class="lab"><b>2 · Draft reply</b><span class="ms" id="d-ms"></span></div>
-          <div class="tabs" role="tablist">
-            <button class="tab" role="tab" aria-selected="true" data-lang="pt" type="button">PT</button>
-            <button class="tab" role="tab" aria-selected="false" data-lang="en" type="button">EN</button>
+          <div class="tabrow">
+            <div class="tabs" role="tablist" id="tabs"></div>
+            <span class="cap">replies in the guest's language</span>
           </div>
-          <div class="reply" id="r-pt"></div>
-          <div class="reply hidden" id="r-en"></div>
+          <div class="frame" id="frame">
+            <div class="frame-head" id="frame-head"></div>
+            <div class="frame-body">
+              <div class="reply" id="r-pt"></div>
+              <div class="reply hidden" id="r-en"></div>
+              <div class="frame-foot" id="frame-foot"></div>
+            </div>
+          </div>
           <div class="held" id="r-held" hidden></div>
         </div>
         <div class="step" id="s-decide">
@@ -246,19 +277,19 @@ footer a{color:var(--teal)}
   ];
 
   var MESSAGES = [
-    {id:1, name:'Sofia Ribeiro', chan:'Booking inbox', time:'08:12', lang:'pt',
+    {id:1, name:'Sofia Ribeiro', chan:'Booking inbox', time:'08:12', lang:'pt', kind:'thread',
      text:'Bom dia! A luz da casa de banho do quarto 3 não acende desde ontem à noite. Podem ver?',
      ref:'CM-2411', verify:{ok:true, line:'Booking matches · guest is in-house (room 3, 15–19 Sep).'},
      pt:'Bom dia Sofia, obrigado por avisar. Já registámos a avaria (ticket M-118) e a nossa manutenção passa pelo quarto 3 hoje até às 12:00. Entretanto, o candeeiro de pé junto à cama funciona.\n\nCom os melhores cumprimentos,\nCasa Miradouro',
      en:'Good morning Sofia, thank you for letting us know. We have logged the fault (ticket M-118) and our maintenance will come by room 3 today before 12:00. In the meantime, the floor lamp by the bed works.\n\nBest regards,\nCasa Miradouro',
      decision:'auto', why:['Non-urgent fault, guest verified in-house.','Maintenance ticket M-118 opened and assigned.','Reply sent · owner sees it in the morning digest.'], ms:[640,1780,2100]},
-    {id:2, name:'Daniel Kessler', chan:'Email', time:'09:41', lang:'en',
+    {id:2, name:'Daniel Kessler', chan:'Email', time:'09:41', lang:'en', kind:'email', email:'daniel.kessler@example.com', subject:'Wifi + arriving this afternoon',
      text:'Hi, arriving this afternoon. What is the wifi password? Need to join a call at 16:00.',
      ref:'CM-2418', verify:{ok:true, line:'Booking matches · arrives today (room 1, 17–20 Sep).'},
      pt:'Bom dia Daniel, bem-vindo! A rede é "CasaMiradouro" e a palavra-passe está no cartão junto à cama. O quarto 1 está pronto a partir das 15:00, mas pode chegar mais cedo e trabalhar na sala. Até já!\n\nCom os melhores cumprimentos,\nCasa Miradouro',
      en:'Good morning Daniel, welcome! The network is "CasaMiradouro" and the password is on the card by your bed. Room 1 is ready from 15:00, but you are welcome earlier to work from the lounge. See you soon!\n\nBest regards,\nCasa Miradouro',
      decision:'auto', why:['Information request, booking verified.','Answer from the house guide · no judgement needed.','Reply sent.'], ms:[520,1610,1900]},
-    {id:3, name:'Marta Lopes', chan:'WhatsApp', time:'10:05', lang:'pt',
+    {id:3, name:'Marta Lopes', chan:'WhatsApp', time:'10:05', lang:'pt', kind:'chat', phone:'+351 9•• ••• 214',
      text:'Olá! Será possível mudar a nossa reserva de 26–29 set para 3–6 out? Surgiu um imprevisto no trabalho.',
      ref:'CM-2425', verify:{ok:true, line:'Booking matches · future stay (room 4, 26–29 Sep). Availability pre-checked: room 4 is free 3–6 Oct.'},
      pt:'Bom dia Marta, obrigado pela mensagem. Consultámos e temos disponibilidade para 3–6 de outubro. A alteração precisa da confirmação da proprietária, que responde ainda hoje. Entretanto, guardamos as novas datas para si.\n\nCom os melhores cumprimentos,\nCasa Miradouro',
@@ -266,19 +297,19 @@ footer a{color:var(--teal)}
      decision:'esc', why:['Booking modification · never changed without the owner.','Availability checked so the owner decides in one tap.','Reply drafted and held.'], held:'Draft held · goes out when the owner confirms', ms:[700,1900,2300],
      confirmPT:'Bom dia Marta, confirmado! A sua reserva passa para 3–6 de outubro, quarto 4, ao mesmo preço. Até breve!\n\nCom os melhores cumprimentos,\nCasa Miradouro',
      confirmEN:'Good morning Marta, confirmed! Your booking now runs 3–6 October, room 4, at the same rate. See you soon!\n\nBest regards,\nCasa Miradouro'},
-    {id:4, name:'James Okafor', chan:'WhatsApp', time:'10:37', lang:'en',
+    {id:4, name:'James Okafor', chan:'WhatsApp', time:'10:37', lang:'en', kind:'chat', phone:'+44 7••• ••• 908',
      text:'Morning! Our flight tomorrow is at 19:00. Any chance of a late checkout?',
      ref:'CM-2407', verify:{ok:true, line:'Booking matches · checks out tomorrow (room 2, 14–18 Sep). Room 2 has no arrival on 18 Sep.'},
      pt:'Bom dia James! Sim, o quarto 2 está livre amanhã, por isso pode ficar até às 13:00 sem custo. Se precisar até mais tarde, guardamos as malas na receção. Boa viagem!\n\nCom os melhores cumprimentos,\nCasa Miradouro',
      en:'Good morning James! Yes, room 2 is free tomorrow, so you can stay until 13:00 at no charge. If you need longer, we will keep your bags at reception. Safe travels!\n\nBest regards,\nCasa Miradouro',
      decision:'auto', why:['House rule: late checkout to 13:00 is free when the room is unbooked.','Rule checked against the ledger · passed.','Reply sent.'], ms:[610,1720,2050]},
-    {id:5, name:'Inês Faria', chan:'Channel Talk', time:'11:20', lang:'pt',
+    {id:5, name:'Inês Faria', chan:'Channel Talk', time:'11:20', lang:'pt', kind:'chat', phone:'Channel Talk · @ines.f',
      text:'Bom dia, o pequeno-almoço está incluído? E têm opção vegetariana? Obrigada!',
      ref:'CM-2430', verify:{ok:true, line:'Booking matches · future stay (room 6, 20–22 Sep). Rate includes breakfast.'},
      pt:'Bom dia Inês! Sim, o pequeno-almoço está incluído na sua reserva e é servido das 8:00 às 10:30 no terraço. Temos sempre opção vegetariana (ovos, fruta, pão da padaria do bairro, queijos). Até dia 20!\n\nCom os melhores cumprimentos,\nCasa Miradouro',
      en:'Good morning Inês! Yes, breakfast is included in your booking and is served 8:00–10:30 on the terrace. There is always a vegetarian option (eggs, fruit, bread from the local bakery, cheeses). See you on the 20th!\n\nBest regards,\nCasa Miradouro',
      decision:'auto', why:['Information request, booking verified.','Answer from the house guide.','Reply sent.'], ms:[540,1650,1950]},
-    {id:6, name:'Tom Hale', chan:'WhatsApp', time:'11:48', lang:'en',
+    {id:6, name:'Tom Hale', chan:'WhatsApp', time:'11:48', lang:'en', kind:'chat', phone:'+44 7••• ••• 331',
      text:'There is water coming through the ceiling in room 5, dripping onto the bed. It\'s getting worse.',
      ref:'CM-2414', verify:{ok:true, line:'Booking matches · guest is in-house (room 5, 16–19 Sep).'},
      pt:'Bom dia Tom, lamentamos muito. Já avisámos a proprietária, que está a caminho. Por favor afaste as malas da zona molhada. Se quiser, o quarto 6 está livre esta noite e podemos mudá-lo já.\n\nCom os melhores cumprimentos,\nCasa Miradouro',
@@ -333,15 +364,17 @@ footer a{color:var(--teal)}
 
     $('empty').hidden=true; $('work').hidden=false;
     detail.classList.add('open'); app.classList.add('detail-on');
+    detail.scrollTop=0; if(window.innerWidth<820) window.scrollTo(0,0);
     $('d-avatar').textContent=initials(m.name); $('d-who').textContent=m.name;
     $('d-chan').textContent=m.chan+' · '+m.time; $('d-text').textContent=m.text; $('d-time').textContent='received '+m.time;
+    renderIncoming(m); renderTabs(m); renderFrame(m);
 
     // reset steps
     ['s-verify','s-draft','s-decide'].forEach(function(s){ $(s).classList.remove('in'); });
     $('v-ms').innerHTML='<span class="spin"></span> looking up'; $('v-kv').innerHTML=''; $('v-check').innerHTML='';
-    $('d-ms').textContent=''; $('r-pt').textContent=''; $('r-en').textContent=''; $('r-held').hidden=true;
+    $('d-ms').textContent=''; $('r-pt').textContent=''; $('r-en').textContent=''; $('r-held').hidden=true; $('frame-foot').textContent='';
     $('x-ms').textContent=''; $('x-badge').innerHTML=''; $('x-why').innerHTML=''; $('x-gate').hidden=true;
-    setLang('pt');
+    setLang(m.lang);
     highlightLedger(m.ref);
 
     var already = state[m.id] && state[m.id]!=='new';
@@ -357,7 +390,8 @@ footer a{color:var(--teal)}
     // step 2
     later(function(){
       $('s-draft').classList.add('in');
-      $('d-ms').textContent='drafted in '+((t[1]-t[0])/1000).toFixed(1)+'s · PT + EN';
+      $('d-ms').textContent='drafted in '+((t[1]-t[0])/1000).toFixed(1)+'s · '+m.lang.toUpperCase()+' first';
+      $('frame-foot').textContent = footFor(m, m.decision==='esc' ? 'held' : 'sent');
       $('r-pt').textContent = m.pt; $('r-en').textContent = m.en;
       if(m.held){ $('r-held').hidden=false; $('r-held').textContent = m.held; }
     }, t[1]);
@@ -395,8 +429,35 @@ footer a{color:var(--teal)}
     $('confirm').hidden=true;
     $('r-pt').textContent = m.confirmPT; $('r-en').textContent = m.confirmEN;
     $('r-held').hidden=false; $('r-held').textContent='Sent after owner confirmation';
+    $('frame-foot').textContent = footFor({time:plusMinutes(m.time,19), kind:m.kind, chan:m.chan}, 'sent');
   }
 
+  function renderIncoming(m){
+    var b=$('bubble'), h=$('d-head');
+    b.className='bubble '+m.kind;
+    if(m.kind==='email'){ h.hidden=false; h.innerHTML='<b>From</b> '+m.email+'<br><b>Subject</b> '+m.subject; }
+    else if(m.kind==='thread'){ h.hidden=false; h.innerHTML='<b>Via</b> '+m.chan+' · reservation '+m.ref; }
+    else { h.hidden=false; h.innerHTML='<b>'+m.chan+'</b> · '+m.phone; }
+  }
+  function renderTabs(m){
+    var order = m.lang==='pt' ? ['pt','en'] : ['en','pt'];
+    $('tabs').innerHTML = order.map(function(l,i){
+      return '<button class="tab" role="tab" aria-selected="'+(i===0)+'" data-lang="'+l+'" type="button">'+l.toUpperCase()+(i===0?' · guest':'')+'</button>';
+    }).join('');
+  }
+  function renderFrame(m){
+    var f=$('frame'), h=$('frame-head');
+    f.className='frame '+m.kind;
+    if(m.kind==='email'){ h.innerHTML='<b>To</b> '+m.email+'<br><b>Subject</b> Re: '+m.subject; }
+    else if(m.kind==='thread'){ h.innerHTML='<span><b>Reply via</b> '+m.chan+'</span><span>reservation '+m.ref+'</span>'; }
+    else { h.innerHTML='<b>'+m.chan+'</b> → '+m.name; }
+  }
+  function footFor(m, st){
+    var t = plusMinutes(m.time, 1);
+    if(st==='held') return m.kind==='chat' ? t+' · held' : 'Draft · held';
+    if(m.kind==='chat') return t+' ✓✓';
+    return 'Sent '+t+' via '+m.chan;
+  }
   function setLang(l){
     document.querySelectorAll('.tab').forEach(function(t){ t.setAttribute('aria-selected', t.dataset.lang===l); });
     $('r-pt').classList.toggle('hidden', l!=='pt'); $('r-en').classList.toggle('hidden', l!=='en');
@@ -416,7 +477,7 @@ footer a{color:var(--teal)}
   list.addEventListener('click', function(e){
     var b=e.target.closest('.msg'); if(b) open(+b.dataset.id);
   });
-  document.querySelectorAll('.tab').forEach(function(t){ t.addEventListener('click', function(){ setLang(t.dataset.lang); }); });
+  $('tabs').addEventListener('click', function(e){ var t=e.target.closest('.tab'); if(t) setLang(t.dataset.lang); });
   $('back').addEventListener('click', close);
   $('confirm').addEventListener('click', function(){
     var m = MESSAGES.filter(function(x){return x.id===current;})[0]; if(!m) return;

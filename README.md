@@ -9,7 +9,8 @@ Live: enable GitHub Pages on this repo (Settings → Pages → Source: branch `m
 ## What it shows
 
 - **Verify** — every message is matched to a booking before anything is written. The ledger the loop checks is visible on the page.
-- **Draft** — a bilingual reply (PT / EN), written from the house guide and the booking record.
+- **Draft** — a reply in the guest's own language (PT or EN, inferred from their message), with the other language behind a toggle. Written from the house guide and the booking record.
+- **Own channel** — the draft renders in the frame of the channel it came from: an email layout for email, a chat bubble for WhatsApp and Channel Talk, a reservation thread for the booking inbox. This page is the owner's view; the loop answers where the guest wrote.
 - **Decide** — a badge: `AUTO-ANSWERED` for routine requests, `ESCALATED TO OWNER` when a human must decide.
 - **The human gate** — escalations sit in a "waiting for owner confirmation" state until the owner taps confirm. The demo has two:
   - a **water leak** (safety): the owner is phoned, the guest gets a holding reply immediately.
@@ -18,7 +19,7 @@ Live: enable GitHub Pages on this repo (Settings → Pages → Source: branch `m
 ## The 90-second demo
 
 1. Open the page on a phone. Read the promise strip out loud.
-2. Tap **Daniel Kessler** (wifi). Watch verify → draft → `AUTO-ANSWERED`. Toggle PT / EN. *"Routine, verified, answered."*
+2. Tap **Daniel Kessler** (wifi). Watch verify → draft → `AUTO-ANSWERED`. The reply is an email, in English, because that is how Daniel wrote. Toggle to PT. *"Routine, verified, answered, in the guest's language and channel."*
 3. Tap back, then **Tom Hale** (water leak). It escalates. Point at the pulsing gate. Tap **Owner confirms**. The follow-up reply appears. *"When it matters, a human decides. The guest is never left waiting."*
 4. Tap back, then **Marta Lopes** (date change). It escalates too, with availability already checked. *"The owner decides in one tap, with the work already done."*
 5. Open the **Bookings ledger** at the bottom. *"Nothing is invented. It only answers from what it can verify."*
@@ -33,6 +34,10 @@ python3 -m http.server 8000
 ```
 
 No build, no backend, no API calls, no storage. Fonts load from Google Fonts; everything else is inline.
+
+## Roadmap
+
+- The owner view can ship as an installable app (PWA) — future.
 
 ## Fences
 
