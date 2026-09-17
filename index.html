@@ -143,6 +143,7 @@ header.top .sub.mono{font-size:11.5px;margin-top:2px}
 .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border-radius:8px;font-weight:500}
 .badge.auto{background:var(--teal);color:var(--porcelain)}
 .badge.esc{background:var(--lilac);color:var(--ink)}
+.esc-cap{margin-top:8px;color:#5E5290}
 .why{margin-top:10px;font-size:13.5px;color:var(--ink)}
 .why ul{margin:6px 0 0;padding-left:18px}
 .why li{margin:2px 0}
@@ -254,6 +255,7 @@ footer a{color:var(--teal)}
         <div class="step" id="s-decide">
           <div class="lab"><b>3 · Decide</b><span class="ms" id="x-ms"></span></div>
           <div id="x-badge"></div>
+          <div class="cap esc-cap" id="x-cap" hidden>sent to the owner's own WhatsApp — no new app</div>
           <div class="why" id="x-why"></div>
           <div class="gate" id="x-gate" hidden>
             <span class="st"><span class="pulse"></span> Waiting for owner confirmation</span>
@@ -384,7 +386,7 @@ footer a{color:var(--teal)}
     ['s-verify','s-draft','s-decide'].forEach(function(s){ $(s).classList.remove('in'); });
     $('v-ms').innerHTML='<span class="spin"></span> looking up'; $('v-kv').innerHTML=''; $('v-check').innerHTML='';
     $('d-ms').textContent=''; $('r-pt').textContent=''; $('r-en').textContent=''; $('r-held').hidden=true; $('frame-foot').textContent='';
-    $('x-ms').textContent=''; $('x-badge').innerHTML=''; $('x-why').innerHTML=''; $('x-gate').hidden=true;
+    $('x-ms').textContent=''; $('x-badge').innerHTML=''; $('x-cap').hidden=true; $('x-why').innerHTML=''; $('x-gate').hidden=true;
     setLang(m.lang);
     highlightLedger(m.ref);
 
@@ -421,7 +423,7 @@ footer a{color:var(--teal)}
       state[m.id]='auto';
     } else {
       $('x-badge').innerHTML='<span class="badge esc">⚑ Escalated to owner</span>';
-      $('x-gate').hidden=false;
+      $('x-cap').hidden=false; $('x-gate').hidden=false;
       if(s==='conf'){ showConfirmed(m); } else { state[m.id]='esc'; resetGate(); }
     }
     $('x-why').innerHTML='<ul>'+m.why.map(function(w){return '<li>'+w+'</li>';}).join('')+'</ul>';

@@ -156,6 +156,7 @@ header.top h1 .bal{font-size:.62em;color:var(--slate);white-space:nowrap}
 .badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border-radius:8px;font-weight:500}
 .badge.auto{background:var(--teal);color:var(--porcelain)}
 .badge.esc{background:var(--lilac);color:var(--ink)}
+.esc-cap{margin-top:8px;color:#5E5290}
 .why{margin-top:10px;font-size:13.5px;color:var(--ink)}
 .why ul{margin:6px 0 0;padding-left:18px}
 .why li{margin:2px 0}
@@ -294,6 +295,7 @@ footer a{color:var(--teal)}
         <div class="step" id="s-decide">
           <div class="lab"><b>3 · Decide</b><span class="ms" id="x-ms"></span></div>
           <div id="x-badge"></div>
+          <div class="cap esc-cap" id="x-cap" hidden>enviado para o WhatsApp do dono — sem apps novas</div>
           <div class="why" id="x-why"></div>
           <div class="gate" id="x-gate" hidden>
             <span class="st"><span class="pulse"></span> Waiting for owner confirmation</span>
@@ -345,13 +347,13 @@ footer a{color:var(--teal)}
      pt:'Olá Emma, bem-vinda ao bairro! Estamos abertos de terça a domingo, 12h–14h30 e 18h–21h30, fechados à segunda. O levantamento é ao balcão; entregas são pela Uber Eats. Se encomendar diretamente por WhatsApp para levantar, é sem comissões, e paga ao balcão ao pesar. Até breve!\n\nBrasa do Bairro',
      decision:'auto', why:['Information request · no order to verify.','Answer from the shop guide · no judgement needed.','Reply sent · direct WhatsApp orders steered, no commission.'], ms:[480,1580,1850]},
     {id:4, name:'Paulo Antunes', chan:'WhatsApp', time:'12:30', lang:'pt', kind:'chat', phone:'+351 9•• ••• 655',
-     text:'Boa tarde! Somos 15 pessoas no sábado à noite. Dava para encomendar frango, entrecosto e picanha para levantar às 20h? Que preço ficava?',
-     ref:'B-0423', verify:{ok:true, line:'Group order · 15 pax · Sat 20 Sep 20h00 is inside evening service. Logged as B-0423, quote pending.'},
-     pt:'Boa tarde Paulo, obrigado! Para 15 pessoas o dono faz o orçamento diretamente e responde-te ainda hoje. Já anotámos: sábado 20 set, levantar às 20h, frango + entrecosto + picanha (pedido B-0423). Como referência, contamos ~350 g de carne por pessoa.\n\nBrasa do Bairro',
-     en:'Good afternoon Paulo, thank you! For 15 people the owner quotes directly and will reply to you today. We have noted: Saturday 20 Sep, pickup at 20:00, chicken + ribs + picanha (order B-0423). As a guide, we count ~350 g of meat per person.\n\nBrasa do Bairro',
-     decision:'esc', why:['Group order above 8 pax · commercial gate, the owner quotes.','Date and time checked against service hours · logged on the board.','Reply drafted and held.'], held:'Draft held · goes out when the owner confirms', ms:[700,1900,2300],
-     confirmPT:'Boa tarde Paulo, confirmado pelo dono: 3 frangos, ~2 kg de entrecosto e ~1,5 kg de picanha, com arroz e batata frita para 15, sábado às 20h. Estimado ~190€ — pagas ao levantar; o preço certo é ao pesar. Obrigado!\n\nBrasa do Bairro',
-     confirmEN:'Good afternoon Paulo, confirmed by the owner: 3 chickens, ~2 kg of ribs and ~1.5 kg of picanha, with rice and fries for 15, Saturday at 20:00. Estimated ~190€ — you pay when you collect; the exact price is set at the scale. Thank you!\n\nBrasa do Bairro'},
+     text:'Boa tarde! Queria encomendar para 15 pessoas, levantar sábado às 20h: frango, entrecosto e picanha. Que preço?',
+     ref:'B-0423', verify:{ok:true, line:'Group pickup order · 15 pax · Sat 20 Sep 20h00 is inside evening service. Logged as B-0423, quote pending.'},
+     pt:'Boa tarde Paulo, obrigado! Para 15 pessoas o dono faz o orçamento diretamente e responde-te ainda hoje. Já anotámos: levantamento sábado 20 set às 20h, frango + entrecosto + picanha (pedido B-0423). Como referência, contamos ~350 g de carne por pessoa.\n\nBrasa do Bairro',
+     en:'Good afternoon Paulo, thank you! For 15 people the owner quotes directly and will reply to you today. We have noted: pickup Saturday 20 Sep at 20:00, chicken + ribs + picanha (order B-0423). As a guide, we count ~350 g of meat per person.\n\nBrasa do Bairro',
+     decision:'esc', why:['Group pickup order above 8 pax · commercial gate, the owner quotes.','Pickup date and time checked against service hours · logged on the board.','Reply drafted and held.'], held:'Draft held · goes out when the owner confirms', ms:[700,1900,2300],
+     confirmPT:'Boa tarde Paulo, confirmado pelo dono: 3 frangos, ~2 kg de entrecosto e ~1,5 kg de picanha, com arroz e batata frita para 15, levantamento sábado às 20h ao balcão. Estimado ~190€ — pagas ao levantar; o preço certo é ao pesar. Obrigado!\n\nBrasa do Bairro',
+     confirmEN:'Good afternoon Paulo, confirmed by the owner: 3 chickens, ~2 kg of ribs and ~1.5 kg of picanha, with rice and fries for 15, pickup Saturday at 20:00 at the counter. Estimated ~190€ — you pay when you collect; the exact price is set at the scale. Thank you!\n\nBrasa do Bairro'},
     {id:5, name:'Cláudia Mendes', chan:'WhatsApp', time:'14:05', lang:'pt', kind:'chat', urgent:true, phone:'+351 9•• ••• 289',
      text:'O frango que levantei às 13h estava mal passado junto ao osso. Não é normal, nunca tinha acontecido.',
      ref:'B-0409', verify:{ok:true, line:'Order B-0409 matches · collected 13h02 · 1 frango no carvão, left grill.'},
@@ -427,7 +429,7 @@ footer a{color:var(--teal)}
     $('v-lab').textContent = m.ticket ? '1 · Capture order' : '1 · Check the board';
     $('v-ms').innerHTML='<span class="spin"></span> '+(m.ticket?'reading the order':'looking up'); $('v-kv').innerHTML=''; $('v-kv').hidden=false; $('v-ticket').hidden=true; $('v-ticket').innerHTML=''; $('v-check').innerHTML='';
     $('d-ms').textContent=''; $('r-pt').textContent=''; $('r-en').textContent=''; $('r-held').hidden=true; $('frame-foot').textContent='';
-    $('x-ms').textContent=''; $('x-badge').innerHTML=''; $('x-why').innerHTML=''; $('x-gate').hidden=true;
+    $('x-ms').textContent=''; $('x-badge').innerHTML=''; $('x-cap').hidden=true; $('x-why').innerHTML=''; $('x-gate').hidden=true;
     setLang(m.lang);
     highlightLedger(m.ref);
 
@@ -470,7 +472,7 @@ footer a{color:var(--teal)}
       state[m.id]='auto';
     } else {
       $('x-badge').innerHTML='<span class="badge esc">⚑ Escalated to owner</span>';
-      $('x-gate').hidden=false;
+      $('x-cap').hidden=false; $('x-gate').hidden=false;
       if(s==='conf'){ showConfirmed(m); } else { state[m.id]='esc'; resetGate(); }
     }
     $('x-why').innerHTML='<ul>'+m.why.map(function(w){return '<li>'+w+'</li>';}).join('')+'</ul>';

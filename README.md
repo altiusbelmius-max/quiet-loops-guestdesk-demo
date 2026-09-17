@@ -40,10 +40,14 @@ What changes when the business changes:
 - **The price is set at the scale.** Everything on the grill is sold by weight, so no ticket or reply ever shows a fixed total. The board column is `est.`, and every reply says it in the customer's language: *"estimado ~15€ — pagas ao levantar; o preço certo é ao pesar."*
 - **A new frame: the kitchen ticket.** A WhatsApp order ("meio frango + arroz + esparregado, levantar às 13h") is captured as a structured ticket — order no., lines with weight and per-line estimate, pickup time, estimate — before the reply is drafted. Step 1 becomes *Capture order* for new orders and *Check the board* for everything else.
 - **The dead window.** One message arrives at 15:40, when the shop is closed between services. The loop verifies the order against the board and answers at 15:41; the page captions it *"shop closed 14h30–18h · answered by the loop"*. Nobody was at the counter, and the owner was not interrupted.
-- **Two gates, restaurant-shaped.** A group order for 15 on Saturday escalates on the commercial gate (the owner quotes; the draft holds the date, time and a per-person guide). An undercooked-chicken complaint escalates on the safety/reputation gate: owner phoned, holding reply sent at once with the one line that matters — *"não comas a parte mal passada"* — and a make-good drafted for the owner to confirm.
+- **Two gates, restaurant-shaped.** A group pickup order for 15 on Saturday escalates on the commercial gate (the owner quotes; the draft holds the date, time and a per-person guide). An undercooked-chicken complaint escalates on the safety/reputation gate: owner phoned, holding reply sent at once with the one line that matters — *"não comas a parte mal passada"* — and a make-good drafted for the owner to confirm.
 - **Allergens: quoted, never inferred.** A severe-allergy question from the Uber Eats inbox is answered from the allergen note that is visible on the board, and the reply leaves a visible margin: confirm at the counter when collecting, the kitchen double-checks.
 
 The 90-second demo runs the same way: point at the list (two NEEDS YOU marks, one NEEDS YOU NOW), tap Nuno for the ticket, tap Rui for the dead-window answer, tap Cláudia for the safety gate and confirm, open the board.
+
+### Where it lands
+
+Escalations land in the owner's existing WhatsApp — the caption under every `ESCALATED` badge says so: *"enviado para o WhatsApp do dono — sem apps novas."* Kitchen tickets can print on a cheap thermal printer or show on a counter tablet. This dashboard is an optional check-in view (installable as a PWA, see Roadmap), not a workspace: nobody has to live in it for the loop to run.
 
 ### Re-seeding a vertical is about an hour
 
