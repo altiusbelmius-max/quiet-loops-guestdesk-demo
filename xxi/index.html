@@ -1,0 +1,431 @@
+<!doctype html>
+<html lang="pt">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex,nofollow">
+<meta name="color-scheme" content="light">
+<title>Churrasqueira XXI · Encomendar</title>
+<meta name="description" content="DEMO: proposta de encomenda direta preparada pela Quiet Loops para a Churrasqueira XXI. Não é o site oficial. Nada é enviado, nada é cobrado.">
+<style>
+:root{
+  --white:#FFFFFF; --black:#111111; --ink:#1A1A1A; --grey:#6B6B6B; --line:#E4E4E4; --paper:#F7F5F2;
+  --fire:#E23A16; --fire-dark:#B82B0E; --fire-soft:#FBEAE4; --ok:#1E7A46; --ok-soft:#E6F3EB;
+  --sans:system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --gutter:16px; --r:12px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--white);color:var(--ink);font-family:var(--sans);font-size:15px;line-height:1.5;min-height:100dvh;padding-bottom:88px}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,input:focus-visible,summary:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--fire);outline-offset:2px}
+a{color:var(--fire-dark)}
+.mono{font-family:var(--mono);font-size:12px}
+
+/* mandatory demo banner */
+.demo-banner{position:sticky;top:0;z-index:70;background:var(--black);color:var(--white);font-family:var(--mono);font-size:12px;line-height:1.4;padding:8px var(--gutter);text-align:center;letter-spacing:.01em}
+.demo-banner b{color:#FF7A57;font-weight:600}
+
+/* header */
+header.top{max-width:960px;margin:0 auto;padding:22px var(--gutter) 10px}
+.brand{font-weight:900;font-size:34px;line-height:1;letter-spacing:-.02em;text-transform:uppercase;color:var(--black)}
+.brand span{color:var(--fire)}
+.tag{margin-top:6px;font-size:14px;color:var(--grey)}
+.facts{margin-top:12px;display:grid;gap:4px;font-size:13.5px;color:var(--ink)}
+.facts .k{font-family:var(--mono);font-size:11px;color:var(--grey);text-transform:uppercase;letter-spacing:.06em;margin-right:6px}
+.facts a{color:var(--ink);font-weight:600;text-decoration:none;border-bottom:1px solid var(--line)}
+.now{margin-top:12px;padding:10px 12px;border-radius:var(--r);background:var(--paper);border:1px solid var(--line);font-size:13.5px;display:flex;gap:8px;align-items:flex-start}
+.now .dotk{width:10px;height:10px;border-radius:50%;background:var(--ok);margin-top:6px;flex:none}
+.now.closed .dotk{background:var(--fire)}
+.pricing{max-width:960px;margin:0 auto;padding:6px var(--gutter) 0;font-size:13px;color:var(--fire-dark);font-weight:600}
+
+/* menu */
+main{max-width:960px;margin:0 auto;padding:6px var(--gutter) 24px}
+.grp{margin-top:22px}
+.grp h2{font-size:13px;letter-spacing:.1em;text-transform:uppercase;color:var(--fire);margin:0 0 8px;font-weight:800}
+.item{display:grid;grid-template-columns:1fr auto;gap:8px 12px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.item .n{font-weight:600}
+.item .d{color:var(--grey);font-size:13px}
+.item .p{font-family:var(--mono);font-size:14px;font-weight:600;white-space:nowrap}
+.step{display:inline-flex;align-items:center;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:var(--white)}
+.step button{width:36px;height:36px;font-size:18px;display:grid;place-items:center;color:var(--fire-dark)}
+.step button:hover{background:var(--fire-soft)}
+.step .q{min-width:26px;text-align:center;font-family:var(--mono);font-size:14px;font-weight:600}
+.item.has .n{color:var(--fire-dark)}
+.foot-note{margin-top:22px;font-size:13px;color:var(--grey)}
+details.board{margin-top:10px;border:1px solid var(--line);border-radius:var(--r)}
+details.board summary{cursor:pointer;padding:12px 14px;font-weight:600;font-size:14px;list-style:none;display:flex;justify-content:space-between}
+details.board summary::-webkit-details-marker{display:none}
+details.board summary::after{content:"+";color:var(--fire)}
+details.board[open] summary::after{content:"–"}
+details.board table{width:100%;border-collapse:collapse;font-size:14px}
+details.board td{padding:8px 14px;border-top:1px solid var(--line)}
+details.board td:last-child{text-align:right;font-family:var(--mono);white-space:nowrap}
+details.board .cap{padding:8px 14px 12px;font-size:12px;color:var(--grey)}
+@media (min-width:720px){ .menu-grid{display:grid;grid-template-columns:1fr 1fr;gap:0 40px} }
+
+/* cart bar */
+.cartbar{position:fixed;left:0;right:0;bottom:0;z-index:40;padding:10px var(--gutter) max(10px,env(safe-area-inset-bottom));background:var(--white);border-top:1px solid var(--line)}
+.cartbar .in{max-width:960px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.cartbar .sum{font-size:14px}
+.cartbar .sum b{font-family:var(--mono);font-size:16px}
+.btn{background:var(--fire);color:var(--white);font-weight:700;padding:12px 20px;border-radius:999px;font-size:15px;white-space:nowrap}
+.btn:hover{background:var(--fire-dark)}
+.btn:disabled{background:var(--line);color:var(--grey);cursor:default}
+.btn.ghost{background:var(--white);color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--paper)}
+.btn.ok{background:var(--ok)}
+
+/* checkout sheet */
+.sheet{position:fixed;inset:0;top:var(--banner-h,0px);z-index:60;background:var(--white);overflow-y:auto;padding-bottom:env(safe-area-inset-bottom)}
+.sheet .in{max-width:640px;margin:0 auto;padding:0 var(--gutter) 40px}
+.sheet-head{position:sticky;top:0;background:var(--white);border-bottom:1px solid var(--line);padding:12px 0;display:flex;align-items:center;gap:10px;z-index:2}
+.sheet-head h2{font-size:18px;margin:0;font-weight:800}
+.sheet-head .x{margin-left:auto;font-size:14px;color:var(--grey);text-decoration:underline;text-underline-offset:3px}
+.sec{margin-top:22px}
+.sec h3{font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--fire);margin:0 0 8px;font-weight:800;display:flex;justify-content:space-between}
+.sec h3 .ok-mark{color:var(--ok)}
+.lines{border:1px solid var(--line);border-radius:var(--r);overflow:hidden}
+.line{display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:9px 12px;border-top:1px solid var(--line);font-size:14px}
+.line:first-child{border-top:0}
+.line .q{font-family:var(--mono);color:var(--grey)}
+.line .p{font-family:var(--mono);white-space:nowrap}
+.line.total{background:var(--paper);font-weight:700}
+.notice{padding:10px 12px;border-radius:10px;font-size:13.5px;background:var(--fire-soft);border:1px solid #F3C7BA;color:var(--fire-dark);margin-bottom:10px}
+.notice.calm{background:var(--paper);border-color:var(--line);color:var(--ink)}
+.slots{display:flex;gap:8px;overflow-x:auto;padding:4px 2px 8px;-webkit-overflow-scrolling:touch}
+.slot{flex:none;font-family:var(--mono);font-size:14px;padding:9px 14px;border:1px solid var(--line);border-radius:999px;background:var(--white)}
+.slot[aria-pressed="true"]{background:var(--black);color:var(--white);border-color:var(--black)}
+.slot-day{font-size:13px;color:var(--grey);margin-bottom:4px}
+.radio{display:grid;gap:8px}
+.radio label{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;padding:12px;border:1px solid var(--line);border-radius:var(--r);cursor:pointer}
+.radio label:has(input:checked){border-color:var(--black);background:var(--paper)}
+.radio input{margin-top:4px;accent-color:var(--fire)}
+.radio .t{font-weight:600}
+.radio .d{font-size:13px;color:var(--grey)}
+.glovo{margin-top:10px;padding:12px;border:1px dashed var(--grey);border-radius:var(--r);background:var(--paper)}
+.glovo textarea{width:100%;font:inherit;font-size:14px;line-height:1.45;border:1px solid var(--line);border-radius:8px;padding:10px;background:var(--white);resize:vertical;min-height:120px;color:var(--ink)}
+.glovo .row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:8px}
+.glovo .cap{font-size:12.5px;color:var(--grey)}
+.field{display:grid;gap:4px;margin-top:10px}
+.field label{font-size:12px;color:var(--grey);font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
+.field input{font:inherit;font-size:16px;padding:11px 12px;border:1px solid var(--line);border-radius:10px;background:var(--white);color:var(--ink);width:100%}
+.mbway{display:flex;align-items:center;gap:10px;font-weight:700}
+.mbway .logo{display:inline-block;padding:3px 8px;border-radius:6px;background:var(--fire);color:var(--white);font-size:12px;letter-spacing:.04em}
+.fake{margin-top:8px;font-family:var(--mono);font-size:11.5px;color:var(--grey)}
+.paid{display:inline-flex;align-items:center;gap:8px;background:var(--ok-soft);color:var(--ok);border:1px solid var(--ok);border-radius:999px;padding:10px 18px;font-weight:800;font-size:16px}
+.spin{display:inline-block;width:12px;height:12px;border:2px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp .8s linear infinite;vertical-align:-1px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.conf{margin-top:14px;padding:16px;border-radius:var(--r);border:2px solid var(--ok);background:var(--ok-soft)}
+.conf .big{font-size:22px;font-weight:900;line-height:1.1}
+.conf .no{font-family:var(--mono);font-size:14px;margin-top:4px}
+.conf p{margin:8px 0 0;font-size:14px}
+.ticket{margin-top:14px;font-family:var(--mono);font-size:12.5px;line-height:1.5;border:1px dashed var(--black);border-radius:4px;padding:12px 14px;background:#FFFDF6;max-width:340px}
+.tk-h{display:flex;justify-content:space-between;font-weight:700;letter-spacing:.08em;border-bottom:1px dashed var(--line);padding-bottom:6px;margin-bottom:6px}
+.tk-l{display:grid;grid-template-columns:auto 1fr;gap:0 12px}
+.tk-f{border-top:1px dashed var(--line);margin-top:6px;padding-top:6px}
+.tk-cap{font-size:12px;color:var(--grey);margin-top:6px}
+footer{max-width:960px;margin:0 auto;padding:12px var(--gutter) 24px;font-size:13px;color:var(--grey);border-top:1px solid var(--line)}
+footer .l1{font-family:var(--mono);font-size:12px;color:var(--ink)}
+footer a{color:var(--fire-dark)}
+@media (prefers-reduced-motion:reduce){ .spin{animation:none} }
+</style>
+</head>
+<body>
+<div class="demo-banner" role="note" id="demo-banner"><b>DEMO</b> · Proposta de encomenda direta preparada pela Quiet Loops para a Churrasqueira XXI — não é o site oficial.</div>
+
+<header class="top">
+  <div class="brand">Churrasqueira <span>XXI</span></div>
+  <div class="tag">Frango no churrasco e brasa, para levantar ao balcão. Encomenda aqui, paga aqui, só levantas.</div>
+  <div class="facts">
+    <div><span class="k">Morada</span>Rua Cervantes 1A, Lisboa</div>
+    <div><span class="k">Horário</span>Ter–Dom, 12h–14h30 / 18h–21h30 · encerrado à segunda</div>
+    <div><span class="k">Telefone</span>ou liga como sempre: <a href="tel:+351218470677">21 847 0677</a></div>
+  </div>
+  <div class="now" id="now"><span class="dotk"></span><span id="now-text"></span></div>
+</header>
+<div class="pricing">preços de levantamento — mais baratos do que nas apps</div>
+
+<main>
+  <div class="menu-grid" id="menu"></div>
+  <div class="foot-note">Ao balcão vendemos ao peso; online são doses fixas. Se quiseres uma quantidade à medida, liga ou passa cá.</div>
+  <details class="board" id="board">
+    <summary><span>A nossa tabela de balcão (ao peso)</span></summary>
+    <table>
+      <tbody>
+        <tr><td>Frango no churrasco</td><td>15,70 €/kg</td></tr>
+        <tr><td>Picanha</td><td>44,00 €/kg</td></tr>
+        <tr><td>Bacalhau</td><td>45,00 €/kg</td></tr>
+        <tr><td>Borrego</td><td>38,00 €/kg</td></tr>
+        <tr><td>Secretos</td><td>39,00 €/kg</td></tr>
+      </tbody>
+    </table>
+    <div class="cap">excerto · preço final ao pesar, ao balcão</div>
+  </details>
+</main>
+
+<div class="cartbar" id="cartbar">
+  <div class="in">
+    <div class="sum" id="cart-sum">Carrinho vazio</div>
+    <button class="btn" id="go" type="button" disabled>Continuar</button>
+  </div>
+</div>
+
+<div class="sheet" id="sheet" hidden role="dialog" aria-modal="true" aria-labelledby="sheet-h">
+  <div class="in">
+    <div class="sheet-head">
+      <h2 id="sheet-h">A tua encomenda</h2>
+      <button class="x" id="sheet-x" type="button">← voltar ao menu</button>
+    </div>
+
+    <div class="sec">
+      <h3><span>Itens</span><span class="mono" id="order-no-top"></span></h3>
+      <div class="lines" id="lines"></div>
+    </div>
+
+    <div class="sec" id="sec-slot">
+      <h3><span>1 · Hora de levantamento</span><span class="ok-mark" id="slot-ok" hidden>✓</span></h3>
+      <div class="notice" id="slot-notice" hidden></div>
+      <div class="slot-day" id="slot-day"></div>
+      <div class="slots" id="slots" role="group" aria-label="Horas de levantamento"></div>
+      <div class="field"><label for="name">Nome para o talão</label><input id="name" type="text" placeholder="ex.: Ana" autocomplete="off"></div>
+    </div>
+
+    <div class="sec" id="sec-deliv">
+      <h3><span>2 · Como recebes</span></h3>
+      <div class="radio">
+        <label><input type="radio" name="deliv" value="pickup" checked><span><span class="t">Levantamento ao balcão (grátis)</span><br><span class="d">Rua Cervantes 1A. Dizes o número da encomenda e levantas.</span></span></label>
+        <label><input type="radio" name="deliv" value="glovo"><span><span class="t">Enviar o teu estafeta (Glovo)</span><br><span class="d">Pedes um "Qualquer Coisa" na app Glovo com o texto que escrevemos por ti. Pagas a viagem à Glovo; a comida já está paga aqui.</span></span></label>
+      </div>
+      <div class="glovo" id="glovo" hidden>
+        <textarea id="glovo-text" readonly aria-label="Texto para a app Glovo"></textarea>
+        <div class="row">
+          <span class="cap">nós escrevemos o texto, tu só colas na app</span>
+          <button class="btn ghost" id="copy" type="button">Copiar texto</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec" id="sec-pay">
+      <h3><span>3 · Pagamento</span><span class="ok-mark" id="pay-ok" hidden>✓</span></h3>
+      <div class="notice calm">Pagamento <b>simulado</b> nesta proposta: nada é cobrado, nada é enviado. É só para veres o fluxo.</div>
+      <div class="mbway"><span class="logo">MB WAY</span><span>Pagar com MB Way</span></div>
+      <div class="field" id="mbway-field"><label for="mbway">Número de telemóvel MB Way</label><input id="mbway" type="tel" inputmode="numeric" placeholder="9•• ••• •••" autocomplete="off"></div>
+      <div style="margin-top:12px;display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+        <button class="btn" id="pay" type="button" disabled>Pagar</button>
+        <span class="paid" id="paid" hidden>PAGO ✓</span>
+        <span class="fake">simulado · sem processamento</span>
+      </div>
+    </div>
+
+    <div class="sec" id="sec-conf" hidden>
+      <div class="conf" id="conf">
+        <div class="big">Encomenda recebida.</div>
+        <div class="no" id="conf-no"></div>
+        <p id="conf-when"></p>
+        <p id="conf-how"></p>
+        <p style="color:var(--grey)">Dúvidas? Liga como sempre: <a href="tel:+351218470677">21 847 0677</a>.</p>
+      </div>
+      <div class="ticket" id="ticket"></div>
+      <div class="tk-cap">o talão sai na cozinha — impressora térmica ou tablet ao balcão</div>
+      <div class="glovo" id="glovo2" hidden>
+        <div class="cap" style="font-size:13px;margin-bottom:6px"><b>Para o teu estafeta Glovo</b> — o texto já está pronto:</div>
+        <textarea id="glovo-text2" readonly aria-label="Texto para a app Glovo"></textarea>
+        <div class="row"><span class="cap">nós escrevemos o texto, tu só colas na app</span><button class="btn ghost" id="copy2" type="button">Copiar texto</button></div>
+      </div>
+      <div style="margin-top:16px"><button class="btn ghost" id="again" type="button">Nova encomenda (demo)</button></div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="l1">proposta Quiet Loops · o Uber Eats continua a tratar das entregas · isto trata do balcão</div>
+  <div style="margin-top:6px"><a href="../brasa/">vê o lado do dono (demo fictícia)</a></div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  var MENU = [
+    {g:'Frango', items:[
+      ['frango','Frango no Churrasco','inteiro, ~750 g, molho de limão',15.00],
+      ['meio','1/2 Frango','molho de limão',8.50],
+      ['menu-frango','Menu Frango','frango inteiro + acompanhamento + bebida',20.00],
+      ['menu-meio','Menu 1/2 Frango','meio frango + acompanhamento + bebida',12.50]]},
+    {g:'Na brasa', items:[
+      ['piano','Piano de Porco na Brasa','dose ~450 g',18.00],
+      ['entremeada','Entremeada Grelhada','4 tiras',12.00],
+      ['toscana','Salsicha Toscana','unidade',2.50]]},
+    {g:'Acompanhamentos', items:[
+      ['chips','Batata Frita Chips','',3.50],
+      ['arroz','Arroz Branco','',5.00],
+      ['primavera','Arroz Primavera','',5.50],
+      ['feijao','Feijão Preto','',5.00],
+      ['esparregado','Esparregado','',6.00],
+      ['salada','Salada Mista','2 pessoas',3.60],
+      ['migas','Migas à moda da casa','',9.00],
+      ['azeitonas','Azeitonas Temperadas','',5.00]]},
+    {g:'Sopa e doce', items:[
+      ['sopa','Sopa do Dia','',1.80],
+      ['mousse','Mousse de Chocolate','',2.70]]},
+    {g:'Bebidas', items:[
+      ['superbock','Super Bock 1L','',3.80],
+      ['cola','Coca-Cola 1,5L','',4.00]]}
+  ];
+  var ITEMS = {}; MENU.forEach(function(g){ g.items.forEach(function(i){ ITEMS[i[0]]={id:i[0],name:i[1],desc:i[2],price:i[3]}; }); });
+  var cart = {}, order = {no:null, slot:null, slotDay:null, deliv:'pickup', paid:false};
+  var $ = function(id){ return document.getElementById(id); };
+  function eur(n){ return n.toFixed(2).replace('.',',')+'€'; }
+  function pad(n){ return String(n).padStart(2,'0'); }
+  function hm(min){ return pad(Math.floor(min/60))+'h'+pad(min%60); }
+
+  // ---- clock (real, or ?agora=HH:MM[&dia=0-6] for demos) ----
+  var qs = new URLSearchParams(location.search);
+  function now(){
+    var d = new Date();
+    if(qs.get('agora')){ var p=qs.get('agora').split(':'); d.setHours(+p[0], +(p[1]||0), 0, 0); }
+    if(qs.get('dia')!==null){ var want=+qs.get('dia'); d.setDate(d.getDate() + ((want - d.getDay() + 7) % 7)); }
+    return d;
+  }
+  var WINDOWS = [[12*60, 14*60+30],[18*60, 21*60+30]];
+  var DAYS = ['dom','seg','ter','qua','qui','sex','sáb'];
+  function isClosedDay(d){ return d.getDay()===1; }
+  function serviceState(d){
+    var t = d.getHours()*60+d.getMinutes();
+    if(isClosedDay(d)) return {open:false, msg:'Hoje é segunda: estamos encerrados. Podes encomendar já para terça a partir das 12h00.'};
+    if(t < WINDOWS[0][0]) return {open:false, msg:'Cozinha abre às 12h00. Encomenda agora, levanta a partir das 12h00.'};
+    if(t <= WINDOWS[0][1]) return {open:true, msg:'Cozinha aberta (almoço até às 14h30). Levantamento a partir de '+hm(earliestToday(d))+'.'};
+    if(t < WINDOWS[1][0]) return {open:false, msg:'Cozinha fechada entre as 14h30 e as 18h. Encomenda agora, levanta às 18h00+.'};
+    if(t <= WINDOWS[1][1]-20) return {open:true, msg:'Cozinha aberta (jantar até às 21h30). Levantamento a partir de '+hm(earliestToday(d))+'.'};
+    return {open:false, msg:'Cozinha a fechar. Podes encomendar já para amanhã a partir das 12h00.'};
+  }
+  function earliestToday(d){ var t=d.getHours()*60+d.getMinutes()+25; return Math.ceil(t/15)*15; }
+  function slotsFor(d){
+    // returns {day:Date, label, slots:[min], dead:bool}
+    var t = earliestToday(d), out=[], dead=false;
+    if(!isClosedDay(d)){
+      WINDOWS.forEach(function(w){ for(var m=w[0]; m<=w[1]; m+=15){ if(m>=t) out.push(m); } });
+      if(t > WINDOWS[0][1] && t < WINDOWS[1][0]) dead = true;
+    }
+    if(out.length) return {day:d, label:'hoje', slots:out, dead:dead};
+    var n = new Date(d); n.setDate(n.getDate()+1); n.setHours(0,0,0,0);
+    if(isClosedDay(n)) n.setDate(n.getDate()+1);
+    var all=[]; WINDOWS.forEach(function(w){ for(var m=w[0]; m<=w[1]; m+=15) all.push(m); });
+    var isTomorrow = (n - new Date(d.getFullYear(),d.getMonth(),d.getDate())) <= 86400000;
+    return {day:n, label:(isTomorrow?'amanhã':'')+' ('+DAYS[n.getDay()]+' '+n.getDate()+')', slots:all, dead:false, later:true};
+  }
+
+  // ---- menu ----
+  function renderMenu(){
+    $('menu').innerHTML = MENU.map(function(g){
+      return '<section class="grp"><h2>'+g.g+'</h2>'+g.items.map(function(i){
+        var q = cart[i[0]]||0;
+        return '<div class="item'+(q?' has':'')+'" data-id="'+i[0]+'"><div><div class="n">'+i[1]+'</div>'+(i[2]?'<div class="d">'+i[2]+'</div>':'')+'</div>'+
+          '<div style="display:flex;align-items:center;gap:12px"><span class="p">'+eur(i[3])+'</span>'+
+          '<span class="step"><button type="button" data-d="-1" aria-label="Menos '+i[1]+'">−</button><span class="q" data-q="'+i[0]+'">'+q+'</span><button type="button" data-d="1" aria-label="Mais '+i[1]+'">+</button></span></div></div>';
+      }).join('')+'</section>';
+    }).join('');
+  }
+  function totals(){ var n=0,s=0; Object.keys(cart).forEach(function(k){ n+=cart[k]; s+=cart[k]*ITEMS[k].price; }); return {n:n,s:s}; }
+  function renderCart(){
+    var t = totals();
+    $('cart-sum').innerHTML = t.n ? t.n+(t.n===1?' item':' itens')+' · <b>'+eur(t.s)+'</b>' : 'Carrinho vazio';
+    $('go').disabled = !t.n;
+  }
+  $('menu').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-d]'); if(!b) return;
+    var id = b.closest('.item').dataset.id, q = Math.max(0, (cart[id]||0) + (+b.dataset.d));
+    if(q) cart[id]=q; else delete cart[id];
+    b.closest('.item').classList.toggle('has', !!q);
+    b.parentNode.querySelector('.q').textContent = q;
+    renderCart();
+  });
+
+  // ---- checkout ----
+  function fitBanner(){ document.documentElement.style.setProperty('--banner-h', $('demo-banner').offsetHeight+'px'); }
+  window.addEventListener('resize', fitBanner);
+  function openSheet(){
+    fitBanner();
+    if(!order.no) order.no = 'XXI-0'+(200+Math.floor(Math.random()*700));
+    $('order-no-top').textContent = 'nº '+order.no;
+    var t = totals();
+    $('lines').innerHTML = Object.keys(cart).map(function(k){ return '<div class="line"><span class="q">'+cart[k]+'×</span><span>'+ITEMS[k].name+'</span><span class="p">'+eur(cart[k]*ITEMS[k].price)+'</span></div>'; }).join('')+
+      '<div class="line total"><span></span><span>Total a pagar</span><span class="p">'+eur(t.s)+'</span></div>';
+    renderSlots();
+    $('pay').textContent = 'Pagar '+eur(t.s);
+    $('sheet').hidden = false; document.body.style.overflow='hidden'; window.scrollTo(0,0);
+    $('sheet').scrollTop = 0;
+  }
+  function closeSheet(){ $('sheet').hidden = true; document.body.style.overflow=''; }
+  function renderSlots(){
+    var s = slotsFor(now());
+    order.slotDay = s.day; order.slot = null;
+    var nt = $('slot-notice');
+    if(s.dead){ nt.hidden=false; nt.textContent='Cozinha fechada entre as 14h30 e as 18h. Encomenda agora, levanta às 18h00+.'; }
+    else if(s.later){ nt.hidden=false; nt.textContent=(isClosedDay(now())?'Hoje estamos encerrados (segunda). ':'Hoje já não há horas de levantamento. ')+'Escolhe uma hora para '+s.label+'.'; }
+    else { nt.hidden=true; }
+    $('slot-day').textContent = 'Levantar '+s.label+':';
+    $('slots').innerHTML = s.slots.map(function(m){ return '<button class="slot" type="button" data-m="'+m+'" aria-pressed="false">'+hm(m)+'</button>'; }).join('');
+    $('slot-ok').hidden = true; updatePayState();
+  }
+  $('slots').addEventListener('click', function(e){
+    var b = e.target.closest('.slot'); if(!b) return;
+    document.querySelectorAll('.slot').forEach(function(x){ x.setAttribute('aria-pressed', x===b); });
+    order.slot = +b.dataset.m; $('slot-ok').hidden=false; updatePayState(); renderGlovo();
+  });
+  function updatePayState(){ $('pay').disabled = order.slot===null || order.paid; }
+  document.querySelectorAll('input[name="deliv"]').forEach(function(r){ r.addEventListener('change', function(){ order.deliv = r.value; $('glovo').hidden = r.value!=='glovo'; renderGlovo(); }); });
+  function glovoText(){
+    var when = order.slot!==null ? (order.slotDay && order.slotDay.toDateString()!==now().toDateString() ? DAYS[order.slotDay.getDay()]+' às '+hm(order.slot) : 'às '+hm(order.slot)) : '[hora de levantamento]';
+    return 'Levantamento na Churrasqueira XXI, Rua Cervantes 1A, Lisboa. Encomenda nº '+order.no+', já paga, só levantar. Pronta '+when+'. Diz "'+order.no+'" ao balcão. Obrigado!';
+  }
+  function renderGlovo(){ $('glovo-text').value = glovoText(); $('glovo-text2').value = glovoText(); }
+  function copyFrom(ta, btn){
+    var text = ta.value, done = function(){ var o=btn.textContent; btn.textContent='Copiado ✓'; setTimeout(function(){ btn.textContent=o; }, 1600); };
+    if(navigator.clipboard && navigator.clipboard.writeText){ navigator.clipboard.writeText(text).then(done, function(){ ta.select(); try{ document.execCommand('copy'); }catch(e){} done(); }); }
+    else { ta.select(); try{ document.execCommand('copy'); }catch(e){} done(); }
+  }
+  $('copy').addEventListener('click', function(){ copyFrom($('glovo-text'), $('copy')); });
+  $('copy2').addEventListener('click', function(){ copyFrom($('glovo-text2'), $('copy2')); });
+
+  $('pay').addEventListener('click', function(){
+    if(order.slot===null || order.paid) return;
+    var b = $('pay'); b.disabled = true; b.innerHTML = '<span class="spin"></span>A pedir confirmação MB Way…';
+    setTimeout(function(){
+      order.paid = true; b.hidden = true; $('paid').hidden = false; $('pay-ok').hidden = false;
+      $('mbway').disabled = true; renderConfirmation();
+    }, 900);
+  });
+  function renderConfirmation(){
+    var t = totals(), name = ($('name').value||'').trim() || 'Cliente';
+    var dayLabel = order.slotDay && order.slotDay.toDateString()!==now().toDateString() ? DAYS[order.slotDay.getDay()]+' '+order.slotDay.getDate()+' às ' : 'hoje às ';
+    $('conf-no').textContent = 'Encomenda nº '+order.no+' · '+eur(t.s)+' · PAGO MB Way (simulado)';
+    $('conf-when').textContent = 'Levantamento '+dayLabel+hm(order.slot)+', Rua Cervantes 1A.';
+    $('conf-how').textContent = order.deliv==='glovo' ? 'Vais mandar o teu estafeta Glovo: o texto para a app está abaixo. Ele só diz o número da encomenda ao balcão.' : 'Dizes "'+order.no+'" ao balcão e levantas. Sem fila, sem apps.';
+    $('ticket').innerHTML = '<div class="tk-h"><span>TALÃO COZINHA</span><span>'+order.no+'</span></div>'+
+      '<div class="tk-l">'+Object.keys(cart).map(function(k){ return '<span>'+cart[k]+'×</span><span>'+ITEMS[k].name+'</span>'; }).join('')+'</div>'+
+      '<div class="tk-f">LEVANTAR <b>'+dayLabel.replace(' às ','').toUpperCase()+' '+hm(order.slot)+'</b><br>'+name.toUpperCase()+' · '+(order.deliv==='glovo'?'ESTAFETA GLOVO':'BALCÃO')+'<br>PAGO ✓ MB Way (simulado) · '+eur(t.s)+'</div>';
+    $('glovo2').hidden = order.deliv!=='glovo'; renderGlovo();
+    $('sec-conf').hidden = false;
+    $('sec-conf').scrollIntoView({behavior:'smooth', block:'start'});
+  }
+  $('again').addEventListener('click', function(){
+    cart = {}; order = {no:null, slot:null, slotDay:null, deliv:'pickup', paid:false};
+    $('pay').hidden=false; $('pay').innerHTML='Pagar'; $('paid').hidden=true; $('pay-ok').hidden=true; $('mbway').disabled=false; $('mbway').value=''; $('name').value='';
+    $('sec-conf').hidden=true; document.querySelector('input[name="deliv"][value="pickup"]').checked=true; $('glovo').hidden=true;
+    renderMenu(); renderCart(); closeSheet();
+  });
+  $('go').addEventListener('click', openSheet);
+  $('sheet-x').addEventListener('click', closeSheet);
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && !$('sheet').hidden && !order.paid) closeSheet(); });
+
+  // ---- header status ----
+  var st = serviceState(now());
+  $('now').classList.toggle('closed', !st.open); $('now-text').textContent = st.msg;
+  fitBanner(); renderMenu(); renderCart();
+})();
+</script>
+</body>
+</html>

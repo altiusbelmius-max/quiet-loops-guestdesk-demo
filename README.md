@@ -34,6 +34,10 @@ Live: enable GitHub Pages on this repo (Settings → Pages → Source: branch `m
 
 The same engine re-seeded for **Brasa do Bairro**, a fictional takeaway-only charcoal grill in Graça: a counter, no tables, hours Tue–Sun 12h–14h30 / 18h–21h30, closed Mondays. Header reads *"Owner's view — the loop takes orders, you cook."*
 
+The page opens on **the owner's phone** (toggle: *O telemóvel do dono* ⇄ *O que o loop vê*). The phone is a WhatsApp-style thread from "Brasa · Balcão": only the two escalations arrive there, each with the customer's message quoted and the loop's proposal, and the owner's reply *is* the confirmation. Tap the quick-reply chip or type anything: the owner's bubble posts, the loop acknowledges what it sent to the customer, and the state flips in the loop view too. Auto-answered work is one quiet line at the bottom: *"o loop respondeu a 4 mensagens hoje — nada precisa de ti."* The second view is the working inbox and order board.
+
+Positioning: **O Uber trata das entregas. O loop trata do balcão.** Uber Eats stays as the delivery channel (the allergy question still arrives from its inbox); the loop steers pickups to the counter and to direct WhatsApp/site orders, *sem comissões nos levantamentos*.
+
 What changes when the business changes:
 
 - **The ledger becomes today's order board** — order no., items with kg amounts, pickup time, estimated price, status. Two notes are pinned above it: the allergen note and the dead-window note. A second panel shows the menu board, priced per kg.
@@ -53,6 +57,10 @@ Escalations land in the owner's existing WhatsApp — the caption under every `E
 
 This second page was built by copying the guesthouse page and changing the seed, not the engine. The layout, design tokens, channel frames, escalation-visible list and language-first reply rules carried over untouched. The work was: six messages, a six-row board, one new frame type (the ticket), one caption (the dead window), and the header. That is the claim the two pages make together: the loop is the product; the vertical is a seed file.
 
+## Unlisted · `xxi/` (prospect mockup, real data)
+
+`xxi/index.html` is a **direct-order mockup for a real prospect**, Churrasqueira XXI (Rua Cervantes 1A, Lisboa), built from their published hours, phone and Uber Eats portions at pickup prices. It is not linked from either demo page and carries `noindex,nofollow`; it is reached by direct URL only. The black banner at the top is non-negotiable: *DEMO · Proposta de encomenda direta preparada pela Quiet Loops para a Churrasqueira XXI — não é o site oficial.* Flow: menu → pickup slot inside real service hours (the 14h30–18h dead window offers *"encomenda agora, levanta às 18h00+"*, Monday offers Tuesday) → counter pickup or a generated Glovo "Qualquer Coisa" text with a copy button → MB Way payment that is visibly simulated → confirmation with order no. and kitchen-ticket preview. No logo files, no backend, no storage, no real payment, no staff names. For pitching at any hour, `?agora=15:10` fixes the clock and `?dia=1` (0–6, Sunday first) fixes the weekday.
+
 ## Running it
 
 Each demo is one file. Open `index.html` (guesthouse) or `brasa/index.html` (churrasqueira) in a browser, or serve the folder:
@@ -62,6 +70,12 @@ python3 -m http.server 8000
 ```
 
 No build, no backend, no API calls, no storage. Fonts load from Google Fonts; everything else is inline.
+
+Smoke test (Playwright + Chromium, 390 and 1180 wide, all three pages, screenshots in `tests/shots/`):
+
+```
+node tests/smoke.mjs
+```
 
 ## Roadmap
 

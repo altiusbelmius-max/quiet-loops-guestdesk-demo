@@ -174,6 +174,51 @@ footer{max-width:1080px;margin:0 auto;padding:8px var(--gutter) 40px;color:var(-
 footer .chan{font-family:var(--mono);font-size:12px;color:var(--ink);margin-bottom:6px}
 footer a{color:var(--teal)}
 
+/* view toggle */
+.views{max-width:1080px;margin:0 auto;padding:0 var(--gutter) 14px;display:flex;gap:6px;align-items:center;flex-wrap:wrap}
+.views .vt{font-family:var(--mono);font-size:12px;padding:7px 12px;border-radius:999px;border:1px solid var(--hair);color:var(--slate);background:var(--card)}
+.views .vt[aria-selected="true"]{background:var(--ink);color:var(--porcelain);border-color:var(--ink)}
+.views .vsep{color:var(--slate);font-family:var(--mono);font-size:12px}
+
+/* owner's phone */
+.owner{max-width:1080px;margin:0 auto;padding:0 var(--gutter) 24px}
+.phone{background:var(--card);border:1px solid var(--hair);border-radius:var(--r);overflow:hidden;max-width:420px;margin:0 auto}
+.ph-top{display:flex;justify-content:space-between;font-family:var(--mono);font-size:11px;color:var(--slate);padding:8px 14px 0}
+.ph-head{display:flex;align-items:center;gap:10px;padding:8px 14px 10px;border-bottom:1px solid var(--hair)}
+.ph-head .who{font-weight:600;font-size:15px}
+.ph-head .chan{font-family:var(--mono);font-size:11px;color:var(--slate)}
+.ph-thread{background:var(--porcelain);padding:12px 12px 6px;display:grid;gap:10px;min-height:360px}
+.ph-day{justify-self:center;font-family:var(--mono);font-size:11px;color:var(--slate);background:var(--card);border:1px solid var(--hair);border-radius:999px;padding:2px 10px}
+.ph-in,.ph-out,.ph-ack{max-width:92%;padding:10px 12px;font-size:14.5px;line-height:1.45;border-radius:16px;position:relative}
+.ph-in{justify-self:start;background:var(--card);border:1px solid var(--hair);border-radius:4px 16px 16px 16px;border-left:3px solid var(--lilac);cursor:pointer}
+.ph-in.urgent{border-left-color:#5E5290}
+.ph-in.sel{box-shadow:0 0 0 2px var(--lilac)}
+.ph-in.done{border-left-color:var(--teal);cursor:default;opacity:.85}
+.ph-out{justify-self:end;background:var(--teal-soft);border:1px solid #C9D9DD;border-radius:16px 4px 16px 16px}
+.ph-ack{justify-self:start;background:var(--card);border:1px solid var(--hair);border-radius:4px 16px 16px 16px;border-left:3px solid var(--teal)}
+.ph-tag{display:inline-block;font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:#5E5290;background:var(--lilac-soft);border:1px solid var(--lilac);border-radius:999px;padding:1px 7px;margin-bottom:6px}
+.ph-in.done .ph-tag{color:var(--teal);background:var(--teal-soft);border-color:var(--teal)}
+.ph-q{margin:6px 0;padding:6px 10px;border-left:2px solid var(--hair);color:var(--slate);font-size:13.5px}
+.ph-q b{color:var(--ink);font-weight:500;font-family:var(--mono);font-size:11px;display:block;margin-bottom:2px}
+.ph-prop{margin:6px 0;padding:8px 10px;background:var(--porcelain);border:1px dashed var(--hair);border-radius:8px;font-size:13.5px}
+.ph-ask{font-weight:600}
+.ph-t{display:block;text-align:right;font-family:var(--mono);font-size:10.5px;color:var(--slate);margin-top:4px}
+.ph-sum{justify-self:center;text-align:center;font-family:var(--mono);font-size:11.5px;color:var(--slate);background:var(--card);border:1px solid var(--hair);border-radius:10px;padding:6px 12px;max-width:100%}
+.ph-sum.calm{color:var(--teal);border-color:var(--teal)}
+.ph-compose{border-top:1px solid var(--hair);padding:8px 10px 10px;background:var(--card)}
+.ph-chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:8px}
+.ph-chip{font-size:13px;padding:6px 12px;border-radius:999px;border:1px solid var(--teal);color:var(--teal);background:var(--card);font-weight:500}
+.ph-chip:hover{background:var(--teal-soft)}
+.ph-form{display:flex;gap:8px}
+.ph-form input{flex:1;min-width:0;font:inherit;font-size:16px;padding:9px 12px;border:1px solid var(--hair);border-radius:999px;background:var(--porcelain);color:var(--ink)}
+.ph-form input:focus{outline:2px solid var(--teal);outline-offset:1px}
+.ph-form button{width:42px;height:42px;border-radius:50%;background:var(--ink);color:var(--porcelain);display:grid;place-items:center;font-size:16px}
+.ph-form button:disabled,.ph-form input:disabled{opacity:.45;cursor:default}
+.owner-cap{max-width:420px;margin:10px auto 0;font-family:var(--mono);font-size:11.5px;color:var(--slate);line-height:1.5;text-align:center}
+@media (min-width:820px){
+  .phone{border-radius:32px;border:8px solid var(--ink);box-shadow:0 20px 40px -24px rgba(27,30,34,.5)}
+  .ph-thread{min-height:460px}
+}
 /* phone: detail is a sheet over the list */
 @media (max-width:819px){
   .detail.open{position:fixed;inset:0;z-index:5;background:var(--card);border-radius:0;border:0;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom)}
@@ -212,7 +257,30 @@ footer a{color:var(--teal)}
 </header>
 <div class="switch">same loop, different business: <a href="../">guesthouse</a> ⇄ <b>churrasqueira</b></div>
 
-<main class="app" id="app">
+<div class="views" role="tablist" aria-label="View">
+  <button class="vt" role="tab" id="vt-owner" aria-selected="true" type="button" data-view="owner">O telemóvel do dono</button>
+  <span class="vsep">⇄</span>
+  <button class="vt" role="tab" id="vt-loop" aria-selected="false" type="button" data-view="loop">O que o loop vê</button>
+</div>
+<section class="owner" id="owner" aria-label="Owner's phone">
+  <div class="phone">
+    <div class="ph-top"><span id="ph-clock">14:24</span><span>▲▲▲ ▮</span></div>
+    <div class="ph-head">
+      <div class="avatar">B</div>
+      <div><div class="who">Brasa · Balcão</div><div class="chan">O Uber trata das entregas. O loop trata do balcão.</div></div>
+    </div>
+    <div class="ph-thread" id="ph-thread"></div>
+    <div class="ph-compose">
+      <div class="ph-chips" id="ph-chips"></div>
+      <form class="ph-form" id="ph-form" autocomplete="off">
+        <input id="ph-input" type="text" placeholder="Responder…" aria-label="Reply to Brasa · Balcão">
+        <button type="submit" id="ph-send" aria-label="Send">➤</button>
+      </form>
+    </div>
+  </div>
+  <p class="owner-cap">The owner's existing WhatsApp. Only escalations arrive here; the reply is the confirmation. Everything else the loop answered on its own — switch to <b>O que o loop vê</b> to see the work.</p>
+</section>
+<main class="app" id="app" hidden>
   <section class="pane inbox" aria-labelledby="inbox-h">
     <div class="inbox-head">
       <h2 id="inbox-h">Inbox</h2>
@@ -308,7 +376,8 @@ footer a{color:var(--teal)}
 </main>
 
 <footer>
-  <div class="chan">Connects to what you already use — WhatsApp, email, the Uber Eats inbox.</div>
+  <div class="chan">O Uber trata das entregas. O loop trata do balcão.</div>
+  <div class="chan" style="font-weight:400;color:var(--slate)">Connects to what you already use — WhatsApp, email, the Uber Eats inbox.</div>
   <div>Every reply is logged. Every escalation is a human decision. A <a href="#" rel="noopener">Quiet Loops</a> demo — churrasqueira, customers and orders are fictional.</div>
 </footer>
 
@@ -341,16 +410,17 @@ footer a{color:var(--teal)}
      decision:'auto', why:['Answered at 15:41 · shop closed 14h30–18h · nobody at the counter.','Status read from the order board, not assumed.','Owner not interrupted · sees it in the evening digest.'], ms:[520,1600,1900]},
     {id:3, name:'Emma Whitaker', chan:'Email', time:'10:20', lang:'en', kind:'email', email:'emma.whitaker@example.com', subject:'Opening hours + delivery?',
      text:'Hi! We are staying in Graça this week and keep walking past your grill. What are your opening hours, and do you deliver to our apartment?',
-     ref:null, guide:[['source','Shop guide'],['hours','Ter–Dom 12h–14h30 / 18h–21h30 · closed Mon'],['pickup','at the counter · pay at weighing'],['delivery','Uber Eats · direct WhatsApp orders for pickup, no commission']],
+     ref:null, guide:[['source','Shop guide'],['hours','Ter–Dom 12h–14h30 / 18h–21h30 · closed Mon'],['pickup','at the counter, or order direct on WhatsApp/site · no commission on pickups'],['delivery','Uber Eats, as today']],
      verify:{ok:true, line:'No order to verify · answered from the shop guide (hours, pickup, delivery).'},
-     en:'Hi Emma, welcome to the neighbourhood! We are open Tuesday to Sunday, 12:00–14:30 and 18:00–21:30, closed on Mondays. Pickup is at the counter; delivery runs through Uber Eats. If you order directly on WhatsApp for pickup there is no app commission, and you pay at the counter when it is weighed. See you soon!\n\nBrasa do Bairro',
-     pt:'Olá Emma, bem-vinda ao bairro! Estamos abertos de terça a domingo, 12h–14h30 e 18h–21h30, fechados à segunda. O levantamento é ao balcão; entregas são pela Uber Eats. Se encomendar diretamente por WhatsApp para levantar, é sem comissões, e paga ao balcão ao pesar. Até breve!\n\nBrasa do Bairro',
-     decision:'auto', why:['Information request · no order to verify.','Answer from the shop guide · no judgement needed.','Reply sent · direct WhatsApp orders steered, no commission.'], ms:[480,1580,1850]},
+     en:'Hi Emma, welcome to the neighbourhood! We are open Tuesday to Sunday, 12:00–14:30 and 18:00–21:30, closed on Mondays. You can pick up at the counter, or order directly on WhatsApp or our site for pickup: no app commission, and you pay at the counter when it is weighed. Delivery to your apartment runs through Uber Eats, as always. See you soon!\n\nBrasa do Bairro',
+     pt:'Olá Emma, bem-vinda ao bairro! Estamos abertos de terça a domingo, 12h–14h30 e 18h–21h30, fechados à segunda. Podes levantar ao balcão, ou encomendar diretamente por WhatsApp ou no nosso site para levantar: sem comissões nos levantamentos, e pagas ao balcão ao pesar. Entregas em casa são pela Uber Eats, como sempre. Até breve!\n\nBrasa do Bairro',
+     decision:'auto', why:['Information request · no order to verify.','Answer from the shop guide · no judgement needed.','Reply sent · pickup steered to direct channels (no commission), delivery left to Uber Eats.'], ms:[480,1580,1850]},
     {id:4, name:'Paulo Antunes', chan:'WhatsApp', time:'12:30', lang:'pt', kind:'chat', phone:'+351 9•• ••• 655',
      text:'Boa tarde! Queria encomendar para 15 pessoas, levantar sábado às 20h: frango, entrecosto e picanha. Que preço?',
      ref:'B-0423', verify:{ok:true, line:'Group pickup order · 15 pax · Sat 20 Sep 20h00 is inside evening service. Logged as B-0423, quote pending.'},
      pt:'Boa tarde Paulo, obrigado! Para 15 pessoas o dono faz o orçamento diretamente e responde-te ainda hoje. Já anotámos: levantamento sábado 20 set às 20h, frango + entrecosto + picanha (pedido B-0423). Como referência, contamos ~350 g de carne por pessoa.\n\nBrasa do Bairro',
      en:'Good afternoon Paulo, thank you! For 15 people the owner quotes directly and will reply to you today. We have noted: pickup Saturday 20 Sep at 20:00, chicken + ribs + picanha (order B-0423). As a guide, we count ~350 g of meat per person.\n\nBrasa do Bairro',
+     owner:{card:'Já lhe disse que fazes o orçamento hoje. Proposta para confirmares:', prop:'3 frangos · ~2 kg entrecosto · ~1,5 kg picanha · arroz e batata frita para 15 · sáb 20 set, 20h ao balcão · est. ~190€, paga ao levantar', ask:'Confirmas? Respondes aqui e eu envio ao Paulo.', chip:'✓ Confirma, envia', ack:'Enviado ao Paulo'},
      decision:'esc', why:['Group pickup order above 8 pax · commercial gate, the owner quotes.','Pickup date and time checked against service hours · logged on the board.','Reply drafted and held.'], held:'Draft held · goes out when the owner confirms', ms:[700,1900,2300],
      confirmPT:'Boa tarde Paulo, confirmado pelo dono: 3 frangos, ~2 kg de entrecosto e ~1,5 kg de picanha, com arroz e batata frita para 15, levantamento sábado às 20h ao balcão. Estimado ~190€ — pagas ao levantar; o preço certo é ao pesar. Obrigado!\n\nBrasa do Bairro',
      confirmEN:'Good afternoon Paulo, confirmed by the owner: 3 chickens, ~2 kg of ribs and ~1.5 kg of picanha, with rice and fries for 15, pickup Saturday at 20:00 at the counter. Estimated ~190€ — you pay when you collect; the exact price is set at the scale. Thank you!\n\nBrasa do Bairro'},
@@ -359,6 +429,7 @@ footer a{color:var(--teal)}
      ref:'B-0409', verify:{ok:true, line:'Order B-0409 matches · collected 13h02 · 1 frango no carvão, left grill.'},
      pt:'Olá Cláudia, lamentamos muito — não devia acontecer. Por favor não comas a parte mal passada. Já passámos ao dono, que te responde pessoalmente ainda hoje. Pedido B-0409 registado.\n\nBrasa do Bairro',
      en:'Hi Cláudia, we are very sorry — this should not happen. Please do not eat the undercooked part. We have passed it to the owner, who will reply to you personally today. Order B-0409 is on record.\n\nBrasa do Bairro',
+     owner:{card:'Já pedi desculpa e disse-lhe para não comer a parte mal passada. Proposta:', prop:'frango novo amanhã por nossa conta, ou reembolso, à escolha dela · grelha da esquerda já verificada', ask:'Envio?', chip:'✓ Envia o frango por nossa conta', ack:'Enviado à Cláudia', phoned:'📞 ligámos-te'},
      decision:'esc', why:['Food-safety and reputation signal: undercooked meat · always a human decision.','Owner phoned and texted at 14:05.','Holding reply sent so the customer is not left waiting.'], held:'Holding reply sent · owner will answer personally', ms:[480,1500,1700],
      confirmPT:'Olá Cláudia, da parte do dono: pedimos desculpa. Amanhã tens um frango novo por nossa conta, é só dizeres a hora — ou devolvemos o valor, como preferires. A grelha da esquerda já foi verificada.\n\nBrasa do Bairro',
      confirmEN:'Hi Cláudia, from the owner: we apologise. Tomorrow you have a new chicken on the house, just tell us the time — or we refund you, whichever you prefer. The left grill has already been checked.\n\nBrasa do Bairro'},
@@ -550,10 +621,61 @@ footer a{color:var(--teal)}
     var m = MESSAGES.filter(function(x){return x.id===current;})[0]; if(!m) return;
     state[m.id]='conf'; showConfirmed(m); renderList();
   });
-  $('reset').addEventListener('click', function(){ state={}; close(); $('ledger').open=false; $('menu').open=false; });
+  $('reset').addEventListener('click', function(){ state={}; ownerReplies={}; phSel=null; close(); renderPhone(); $('ledger').open=false; $('menu').open=false; });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && current!==null) close(); });
 
-  renderLedger(); renderList();
+
+  // ---- owner's phone view ----
+  var view = 'owner', phSel = null, ownerReplies = {}; // id -> text the owner typed
+  function esc(m){ return m.decision==='esc'; }
+  function openEsc(){ return MESSAGES.filter(function(m){ return esc(m) && state[m.id]!=='conf'; }); }
+  function setView(v){
+    view = v;
+    $('owner').hidden = v!=='owner'; app.hidden = v!=='loop';
+    $('vt-owner').setAttribute('aria-selected', v==='owner'); $('vt-loop').setAttribute('aria-selected', v==='loop');
+    if(v==='owner') renderPhone();
+  }
+  function renderPhone(){
+    var th = $('ph-thread'), open = openEsc();
+    if(phSel===null || state[phSel]==='conf') phSel = open.length ? open[0].id : null;
+    var html = '<div class="ph-day">qua 17 set</div>';
+    MESSAGES.filter(esc).forEach(function(m){
+      var done = state[m.id]==='conf', p = m.owner;
+      html += '<div class="ph-in'+(m.urgent?' urgent':'')+(done?' done':'')+(phSel===m.id&&!done?' sel':'')+'" data-id="'+m.id+'" role="button" tabindex="0">'+
+        '<span class="ph-tag">'+(done?'✓ tratado':(m.urgent?'⚑ precisa de ti agora':'⚑ precisa de ti'))+' · '+m.ref+(p.phoned&&!done?' · '+p.phoned:'')+'</span>'+
+        '<div class="ph-q"><b>'+m.name+' · '+chanLabel(m.chan)+' · '+m.time+'</b>'+m.text+'</div>'+
+        '<div>'+p.card+'</div><div class="ph-prop">'+p.prop+'</div>'+
+        (done ? '' : '<div class="ph-ask">'+p.ask+'</div>')+
+        '<span class="ph-t">'+m.time+'</span></div>';
+    });
+    MESSAGES.filter(function(m){ return esc(m) && state[m.id]==='conf'; }).forEach(function(m){
+      var t = plusMinutes(m.time, 19);
+      html += '<div class="ph-out">'+(ownerReplies[m.id]||m.owner.chip)+'<span class="ph-t">'+t+' ✓✓</span></div>'+
+        '<div class="ph-ack"><span class="ph-tag">✓ '+m.owner.ack+' · '+m.ref+'</span><div class="ph-q">'+m.confirmPT.replace(/\n\nBrasa do Bairro$/,'')+'</div><span class="ph-t">'+plusMinutes(m.time,20)+'</span></div>';
+    });
+    var autos = MESSAGES.filter(function(m){ return m.decision==='auto'; }).length;
+    html += '<div class="ph-sum'+(open.length?'':' calm')+'" id="ph-sum">o loop respondeu a '+autos+' mensagens hoje'+(open.length ? ' · '+open.length+(open.length===1?' precisa':' precisam')+' de ti' : ' — nada precisa de ti.')+'</div>';
+    th.innerHTML = html;
+    // compose
+    var sel = MESSAGES.filter(function(m){ return m.id===phSel; })[0];
+    $('ph-chips').innerHTML = sel ? '<button class="ph-chip" type="button" data-id="'+sel.id+'">'+sel.owner.chip+'</button>' : '';
+    $('ph-input').disabled = !sel; $('ph-send').disabled = !sel;
+    $('ph-input').placeholder = sel ? 'Responder sobre '+sel.name.split(' ')[0]+'…' : 'Nada precisa de ti.';
+    $('ph-clock').textContent = sel ? sel.time : plusMinutes('14:05', 19);
+  }
+  function ownerConfirm(id, text){
+    var m = MESSAGES.filter(function(x){ return x.id===id; })[0]; if(!m || state[m.id]==='conf') return;
+    ownerReplies[m.id] = text; state[m.id] = 'conf'; phSel = null;
+    if(current===m.id) showConfirmed(m);
+    renderList(); renderPhone();
+    $('ph-input').value='';
+  }
+  document.querySelector('.views').addEventListener('click', function(e){ var b=e.target.closest('.vt'); if(b) setView(b.dataset.view); });
+  $('ph-thread').addEventListener('click', function(e){ var c=e.target.closest('.ph-in'); if(c && state[+c.dataset.id]!=='conf'){ phSel=+c.dataset.id; renderPhone(); } });
+  $('ph-thread').addEventListener('keydown', function(e){ if(e.key==='Enter'||e.key===' '){ var c=e.target.closest('.ph-in'); if(c){ e.preventDefault(); phSel=+c.dataset.id; renderPhone(); } } });
+  $('ph-chips').addEventListener('click', function(e){ var c=e.target.closest('.ph-chip'); if(c) ownerConfirm(+c.dataset.id, c.textContent); });
+  $('ph-form').addEventListener('submit', function(e){ e.preventDefault(); var t=$('ph-input').value.trim(); if(t && phSel!==null) ownerConfirm(phSel, t); });
+  renderLedger(); renderList(); setView('owner');
 })();
 </script>
 </body>
