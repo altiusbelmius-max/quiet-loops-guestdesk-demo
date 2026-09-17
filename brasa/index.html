@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="color-scheme" content="light">
-<title>Casa Miradouro · Front Desk</title>
-<meta name="description" content="Quiet Loops guest-desk demo: a fictional Lisbon guesthouse inbox where the loop verifies the booking, drafts a bilingual reply, and escalates to the owner when it matters.">
+<title>Brasa do Bairro · Balcão</title>
+<meta name="description" content="Quiet Loops takeaway-counter demo: a fictional Lisbon churrasqueira inbox where the loop captures orders as kitchen tickets, checks the order board, replies in the customer's language, and escalates to the owner when it matters.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -40,6 +40,7 @@ header.top .sub.mono{font-size:11.5px;margin-top:2px}
 .pill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--hair);color:var(--slate);background:var(--card);white-space:nowrap}
 .reset{font-size:13px;color:var(--slate);text-decoration:underline;text-underline-offset:3px;margin-top:6px}
 .reset:hover{color:var(--ink)}
+header.top h1 .bal{font-size:.62em;color:var(--slate);white-space:nowrap}
 .switch{max-width:1080px;margin:0 auto;padding:0 var(--gutter) 10px;font-family:var(--mono);font-size:11.5px;color:var(--slate)}
 .switch a{color:var(--teal)}
 .switch b{font-weight:500;color:var(--ink)}
@@ -81,6 +82,18 @@ header.top .sub.mono{font-size:11.5px;margin-top:2px}
 .ledger .wrap{overflow-x:auto;padding:0 6px 6px;max-width:100%}
 .ledger{min-width:0;overflow:hidden}
 .ledger tr.hl td{background:var(--teal-soft)}
+.ledger .notes{padding:0 16px 8px;display:grid;gap:6px}
+.ledger .note{font-family:var(--mono);font-size:11.5px;line-height:1.5;color:var(--slate);padding:8px 10px;border:1px dashed var(--hair);border-radius:8px;background:var(--porcelain)}
+.ledger .note b{color:var(--ink);font-weight:500}
+.ledger td.est{color:var(--slate)}
+/* kitchen ticket */
+.ticket{font-family:var(--mono);font-size:12px;line-height:1.5;border:1px dashed var(--ink);border-radius:4px;padding:10px 12px;background:#FFFDF6;margin-bottom:8px}
+.tk-head{display:flex;justify-content:space-between;gap:12px;letter-spacing:.08em;font-weight:500;color:var(--ink);border-bottom:1px dashed var(--hair);padding-bottom:6px;margin-bottom:6px}
+.tk-line{display:grid;grid-template-columns:1fr auto auto;gap:0 12px;padding:2px 0}
+.tk-line span:nth-child(n+2){color:var(--slate);white-space:nowrap}
+.tk-foot{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px 12px;border-top:1px dashed var(--hair);padding-top:6px;margin-top:6px}
+.tk-foot b{font-weight:500;color:var(--ink)}
+.closed{display:inline-block;margin-top:4px;padding:1px 7px;border-radius:999px;border:1px solid var(--amber);color:var(--amber);background:var(--amber-soft)}
 
 /* detail */
 .detail{display:none}
@@ -170,7 +183,7 @@ footer a{color:var(--teal)}
   .app{display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start}
   .inbox{grid-column:1}
   .ledger{grid-column:1}
-  .detail{display:block;grid-column:2;grid-row:1/span 2;position:sticky;top:16px;min-height:520px}
+  .detail{display:block;grid-column:2;grid-row:1/span 3;position:sticky;top:16px;min-height:520px}
   .back{display:none}
   header.top h1{font-size:36px}
 }
@@ -187,16 +200,16 @@ footer a{color:var(--teal)}
 
 <header class="top">
   <div>
-    <h1>Casa <em>Miradouro</em></h1>
-    <div class="sub">Owner's view — the loop answers, you watch</div>
-    <div class="sub mono">Alfama, Lisboa · 6 rooms · Wed 17 Sep</div>
+    <h1>Brasa do <em>Bairro</em> <span class="bal">· Balcão</span></h1>
+    <div class="sub">Owner's view — the loop takes orders, you cook.</div>
+    <div class="sub mono">Graça, Lisboa · takeaway · Ter–Dom 12h–14h30 / 18h–21h30 · Wed 17 Sep</div>
   </div>
   <div style="text-align:right">
     <span class="pill">Demo · fictional data</span><br>
     <button class="reset" id="reset" type="button">Reset demo</button>
   </div>
 </header>
-<div class="switch">same loop, different business: <b>guesthouse</b> ⇄ <a href="brasa/">churrasqueira</a></div>
+<div class="switch">same loop, different business: <a href="../">guesthouse</a> ⇄ <b>churrasqueira</b></div>
 
 <main class="app" id="app">
   <section class="pane inbox" aria-labelledby="inbox-h">
@@ -208,11 +221,37 @@ footer a{color:var(--teal)}
   </section>
 
   <details class="pane ledger" id="ledger">
-    <summary><span>Bookings ledger (mock data the loop checks against)</span></summary>
+    <summary><span>Today's order board (mock data the loop checks against)</span></summary>
+    <div class="notes">
+      <div class="note" id="allergen-note"><b>Alergénios</b> · molho piri-piri da casa: malagueta, alho, azeite, vinagre, sal — sem frutos secos; nenhum molho da casa leva frutos secos. Pão de Mafra: glúten. Bacalhau: peixe.</div>
+      <div class="note"><b>Cozinha fechada 14h30–18h</b> · o balcão responde na mesma.</div>
+    </div>
     <div class="wrap">
       <table id="ledger-table">
-        <thead><tr><th>Ref</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Pax</th><th>Source</th><th>Notes</th></tr></thead>
+        <thead><tr><th>No.</th><th>Cliente</th><th>Itens</th><th>Levantar</th><th>est.</th><th>Estado</th></tr></thead>
         <tbody></tbody>
+      </table>
+    </div>
+  </details>
+
+  <details class="pane ledger" id="menu">
+    <summary><span>Menu board (preço por kg · preço final ao pesar)</span></summary>
+    <div class="wrap">
+      <table>
+        <thead><tr><th>Item</th><th>Preço</th></tr></thead>
+        <tbody>
+          <tr><td>Frango no carvão</td><td>15,90 €/kg</td></tr>
+          <tr><td>Entrecosto</td><td>19,00 €/kg</td></tr>
+          <tr><td>Picanha</td><td>43,00 €/kg</td></tr>
+          <tr><td>Bacalhau na brasa</td><td>45,00 €/kg</td></tr>
+          <tr><td>Arroz branco</td><td>8,00 €/kg</td></tr>
+          <tr><td>Batata frita caseira</td><td>15,00 €/kg</td></tr>
+          <tr><td>Esparregado</td><td>13,00 €/kg</td></tr>
+          <tr><td>Feijão preto</td><td>9,00 €/kg</td></tr>
+          <tr><td>Sopa do dia</td><td>1,80 € · dose</td></tr>
+          <tr><td>Pão de Mafra</td><td>3,50 €/kg</td></tr>
+          <tr><td>Mousse de chocolate</td><td>2,70 € · dose</td></tr>
+        </tbody>
       </table>
     </div>
   </details>
@@ -220,7 +259,7 @@ footer a{color:var(--teal)}
   <section class="pane detail" id="detail" aria-live="polite">
     <div class="empty" id="empty">
       <div class="serif">Tap a message.</div>
-      <div>The loop verifies the booking, drafts a reply in Portuguese and English, and decides whether a human needs to see it.</div>
+      <div>The loop captures the order, checks the board, drafts a reply in the customer's language, and decides whether you need to see it.</div>
     </div>
     <div id="work" hidden>
       <div class="detail-head">
@@ -231,7 +270,8 @@ footer a{color:var(--teal)}
       <div class="bubble" id="bubble"><div class="bubble-head" id="d-head" hidden></div><div id="d-text"></div><div class="t" id="d-time"></div></div>
       <div class="steps">
         <div class="step" id="s-verify">
-          <div class="lab"><b>1 · Verify booking</b><span class="ms" id="v-ms"><span class="spin"></span> looking up</span></div>
+          <div class="lab"><b id="v-lab">1 · Check the board</b><span class="ms" id="v-ms"><span class="spin"></span> looking up</span></div>
+          <div id="v-ticket" hidden></div>
           <dl class="kv" id="v-kv"></dl>
           <div class="check" id="v-check"></div>
         </div>
@@ -239,7 +279,7 @@ footer a{color:var(--teal)}
           <div class="lab"><b>2 · Draft reply</b><span class="ms" id="d-ms"></span></div>
           <div class="tabrow">
             <div class="tabs" role="tablist" id="tabs"></div>
-            <span class="cap">replies in the guest's language</span>
+            <span class="cap">replies in the customer's language</span>
           </div>
           <div class="frame" id="frame">
             <div class="frame-head" id="frame-head"></div>
@@ -266,64 +306,66 @@ footer a{color:var(--teal)}
 </main>
 
 <footer>
-  <div class="chan">Connects to what you already use — WhatsApp, email, Channel Talk, booking inboxes.</div>
-  <div>Every reply is logged. Every escalation is a human decision. A <a href="#" rel="noopener">Quiet Loops</a> demo — guesthouse, guests and bookings are fictional.</div>
+  <div class="chan">Connects to what you already use — WhatsApp, email, the Uber Eats inbox.</div>
+  <div>Every reply is logged. Every escalation is a human decision. A <a href="#" rel="noopener">Quiet Loops</a> demo — churrasqueira, customers and orders are fictional.</div>
 </footer>
 
 <script>
 (function(){
   'use strict';
   // ---- mock data (all fictional) ----
-  var BOOKINGS = [
-    {ref:'CM-2411', guest:'Sofia Ribeiro',  room:'3', in:'15 Sep', out:'19 Sep', pax:2, src:'Booking inbox', notes:'In-house · pt'},
-    {ref:'CM-2418', guest:'Daniel Kessler', room:'1', in:'17 Sep', out:'20 Sep', pax:1, src:'Email',         notes:'Arrives today 15:00 · en'},
-    {ref:'CM-2425', guest:'Marta Lopes',    room:'4', in:'26 Sep', out:'29 Sep', pax:2, src:'WhatsApp',      notes:'Flexible rate · pt'},
-    {ref:'CM-2407', guest:'James Okafor',   room:'2', in:'14 Sep', out:'18 Sep', pax:2, src:'WhatsApp',      notes:'Room 2 next arrival 19 Sep · en'},
-    {ref:'CM-2430', guest:'Inês Faria',     room:'6', in:'20 Sep', out:'22 Sep', pax:2, src:'Channel Talk',  notes:'Breakfast incl. · pt'},
-    {ref:'CM-2414', guest:'Tom Hale',       room:'5', in:'16 Sep', out:'19 Sep', pax:2, src:'WhatsApp',      notes:'In-house · en'}
+  var ORDERS = [
+    {ref:'B-0409', guest:'Cláudia Mendes', items:'1 frango no carvão (~1,1 kg) · arroz 0,3 kg',                      pickup:'13h00',            est:'~20€',      status:'levantado 13h02'},
+    {ref:'B-0412', guest:'Nuno Ferreira',  items:'meio frango (~0,6 kg) · arroz 0,3 kg · esparregado 0,25 kg',        pickup:'13h00',            est:'~15€',      status:'em preparação'},
+    {ref:'B-0414', guest:'Ana Teixeira',   items:'entrecosto ~1 kg · batata frita 0,5 kg',                            pickup:'13h30',            est:'~27€',      status:'confirmado'},
+    {ref:'B-0421', guest:'Liam O\'Connor', items:'1 frango no carvão (~1,1 kg) · piri-piri à parte · via Uber Eats',  pickup:'19h00 · balcão',   est:'~18€',      status:'confirmado'},
+    {ref:'B-0418', guest:'Rui Carvalho',   items:'1 frango no carvão (~1,1 kg) · batata frita 0,5 kg · feijão preto 0,3 kg', pickup:'19h30',    est:'~28€',      status:'confirmado'},
+    {ref:'B-0423', guest:'Paulo Antunes',  items:'grupo 15 pax · frango + entrecosto + picanha',                      pickup:'sáb 20 set · 20h00', est:'orçamento', status:'aguarda dono'}
   ];
 
   var MESSAGES = [
-    {id:1, name:'Sofia Ribeiro', chan:'Booking inbox', time:'08:12', lang:'pt', kind:'thread',
-     text:'Bom dia! A luz da casa de banho do quarto 3 não acende desde ontem à noite. Podem ver?',
-     ref:'CM-2411', verify:{ok:true, line:'Booking matches · guest is in-house (room 3, 15–19 Sep).'},
-     pt:'Bom dia Sofia, obrigado por avisar. Já registámos a avaria (ticket M-118) e a nossa manutenção passa pelo quarto 3 hoje até às 12:00. Entretanto, o candeeiro de pé junto à cama funciona.\n\nCom os melhores cumprimentos,\nCasa Miradouro',
-     en:'Good morning Sofia, thank you for letting us know. We have logged the fault (ticket M-118) and our maintenance will come by room 3 today before 12:00. In the meantime, the floor lamp by the bed works.\n\nBest regards,\nCasa Miradouro',
-     decision:'auto', why:['Non-urgent fault, guest verified in-house.','Maintenance ticket M-118 opened and assigned.','Reply sent · owner sees it in the morning digest.'], ms:[640,1780,2100]},
-    {id:2, name:'Daniel Kessler', chan:'Email', time:'09:41', lang:'en', kind:'email', email:'daniel.kessler@example.com', subject:'Wifi + arriving this afternoon',
-     text:'Hi, arriving this afternoon. What is the wifi password? Need to join a call at 16:00.',
-     ref:'CM-2418', verify:{ok:true, line:'Booking matches · arrives today (room 1, 17–20 Sep).'},
-     pt:'Bom dia Daniel, bem-vindo! A rede é "CasaMiradouro" e a palavra-passe está no cartão junto à cama. O quarto 1 está pronto a partir das 15:00, mas pode chegar mais cedo e trabalhar na sala. Até já!\n\nCom os melhores cumprimentos,\nCasa Miradouro',
-     en:'Good morning Daniel, welcome! The network is "CasaMiradouro" and the password is on the card by your bed. Room 1 is ready from 15:00, but you are welcome earlier to work from the lounge. See you soon!\n\nBest regards,\nCasa Miradouro',
-     decision:'auto', why:['Information request, booking verified.','Answer from the house guide · no judgement needed.','Reply sent.'], ms:[520,1610,1900]},
-    {id:3, name:'Marta Lopes', chan:'WhatsApp', time:'10:05', lang:'pt', kind:'chat', phone:'+351 9•• ••• 214',
-     text:'Olá! Será possível mudar a nossa reserva de 26–29 set para 3–6 out? Surgiu um imprevisto no trabalho.',
-     ref:'CM-2425', verify:{ok:true, line:'Booking matches · future stay (room 4, 26–29 Sep). Availability pre-checked: room 4 is free 3–6 Oct.'},
-     pt:'Bom dia Marta, obrigado pela mensagem. Consultámos e temos disponibilidade para 3–6 de outubro. A alteração precisa da confirmação da proprietária, que responde ainda hoje. Entretanto, guardamos as novas datas para si.\n\nCom os melhores cumprimentos,\nCasa Miradouro',
-     en:'Good morning Marta, thank you for your message. We checked and have availability for 3–6 October. The change needs the owner\'s confirmation, which you will have today. In the meantime we are holding the new dates for you.\n\nBest regards,\nCasa Miradouro',
-     decision:'esc', why:['Booking modification · never changed without the owner.','Availability checked so the owner decides in one tap.','Reply drafted and held.'], held:'Draft held · goes out when the owner confirms', ms:[700,1900,2300],
-     confirmPT:'Bom dia Marta, confirmado! A sua reserva passa para 3–6 de outubro, quarto 4, ao mesmo preço. Até breve!\n\nCom os melhores cumprimentos,\nCasa Miradouro',
-     confirmEN:'Good morning Marta, confirmed! Your booking now runs 3–6 October, room 4, at the same rate. See you soon!\n\nBest regards,\nCasa Miradouro'},
-    {id:4, name:'James Okafor', chan:'WhatsApp', time:'10:37', lang:'en', kind:'chat', phone:'+44 7••• ••• 908',
-     text:'Morning! Our flight tomorrow is at 19:00. Any chance of a late checkout?',
-     ref:'CM-2407', verify:{ok:true, line:'Booking matches · checks out tomorrow (room 2, 14–18 Sep). Room 2 has no arrival on 18 Sep.'},
-     pt:'Bom dia James! Sim, o quarto 2 está livre amanhã, por isso pode ficar até às 13:00 sem custo. Se precisar até mais tarde, guardamos as malas na receção. Boa viagem!\n\nCom os melhores cumprimentos,\nCasa Miradouro',
-     en:'Good morning James! Yes, room 2 is free tomorrow, so you can stay until 13:00 at no charge. If you need longer, we will keep your bags at reception. Safe travels!\n\nBest regards,\nCasa Miradouro',
-     decision:'auto', why:['House rule: late checkout to 13:00 is free when the room is unbooked.','Rule checked against the ledger · passed.','Reply sent.'], ms:[610,1720,2050]},
-    {id:5, name:'Inês Faria', chan:'Channel Talk', time:'11:20', lang:'pt', kind:'chat', phone:'Channel Talk · @ines.f',
-     text:'Bom dia, o pequeno-almoço está incluído? E têm opção vegetariana? Obrigada!',
-     ref:'CM-2430', verify:{ok:true, line:'Booking matches · future stay (room 6, 20–22 Sep). Rate includes breakfast.'},
-     pt:'Bom dia Inês! Sim, o pequeno-almoço está incluído na sua reserva e é servido das 8:00 às 10:30 no terraço. Temos sempre opção vegetariana (ovos, fruta, pão da padaria do bairro, queijos). Até dia 20!\n\nCom os melhores cumprimentos,\nCasa Miradouro',
-     en:'Good morning Inês! Yes, breakfast is included in your booking and is served 8:00–10:30 on the terrace. There is always a vegetarian option (eggs, fruit, bread from the local bakery, cheeses). See you on the 20th!\n\nBest regards,\nCasa Miradouro',
-     decision:'auto', why:['Information request, booking verified.','Answer from the house guide.','Reply sent.'], ms:[540,1650,1950]},
-    {id:6, name:'Tom Hale', chan:'WhatsApp', time:'11:48', lang:'en', kind:'chat', urgent:true, phone:'+44 7••• ••• 331',
-     text:'There is water coming through the ceiling in room 5, dripping onto the bed. It\'s getting worse.',
-     ref:'CM-2414', verify:{ok:true, line:'Booking matches · guest is in-house (room 5, 16–19 Sep).'},
-     pt:'Bom dia Tom, lamentamos muito. Já avisámos a proprietária, que está a caminho. Por favor afaste as malas da zona molhada. Se quiser, o quarto 6 está livre esta noite e podemos mudá-lo já.\n\nCom os melhores cumprimentos,\nCasa Miradouro',
-     en:'Good morning Tom, we are very sorry. We have alerted the owner, who is on the way. Please move your bags away from the wet area. If you like, room 6 is free tonight and we can move you now.\n\nBest regards,\nCasa Miradouro',
-     decision:'esc', why:['Emergency signal: water leak · always a human decision.','Owner phoned and texted at 11:48.','Holding reply sent so the guest is not left waiting.'], held:'Holding reply sent · owner on the way', ms:[480,1500,1700],
-     confirmPT:'Bom dia Tom, a proprietária chegou e está no quarto 5. Mudámos a sua reserva para o quarto 6 esta noite. Obrigado pela paciência.\n\nCom os melhores cumprimentos,\nCasa Miradouro',
-     confirmEN:'Good morning Tom, the owner has arrived and is in room 5. We have moved your stay to room 6 for tonight. Thank you for your patience.\n\nBest regards,\nCasa Miradouro'}
+    {id:1, name:'Nuno Ferreira', chan:'WhatsApp', time:'12:08', lang:'pt', kind:'chat', phone:'+351 9•• ••• 402',
+     text:'Boa tarde! meio frango + arroz + esparregado, levantar às 13h. Obrigado',
+     ref:'B-0412', verify:{ok:true, line:'Captured as ticket B-0412 · pickup 13h00 is inside lunch service (12h–14h30) · 52 min for the grill.'},
+     ticket:{no:'B-0412', lines:[['Meio frango no carvão','~0,6 kg','~9,50€'],['Arroz branco','~0,3 kg','~2,40€'],['Esparregado','~0,25 kg','~3,25€']], pickup:'13h00', est:'~15€'},
+     pt:'Boa tarde Nuno! Anotado: meio frango, arroz e esparregado, para levantar às 13h00. Pedido B-0412. Fica estimado em ~15€ — pagas ao levantar; o preço certo é ao pesar. Até já!\n\nBrasa do Bairro',
+     en:'Good afternoon Nuno! Noted: half a chicken, rice and esparregado, for pickup at 13:00. Order B-0412. Estimated at ~15€ — you pay when you collect; the exact price is set at the scale. See you soon!\n\nBrasa do Bairro',
+     decision:'auto', why:['Order captured as a kitchen ticket · on the board for the grill.','Pickup time checked against service hours · no judgement needed.','Reply sent · price given as an estimate, final at weighing.'], ms:[560,1700,2000]},
+    {id:2, name:'Rui Carvalho', chan:'WhatsApp', time:'15:40', lang:'pt', kind:'chat', phone:'+351 9•• ••• 117', closed:true,
+     text:'Boa tarde, o meu pedido de logo à noite já está confirmado?',
+     ref:'B-0418', verify:{ok:true, line:'Order B-0418 matches the sender · pickup 19h30, evening service · status: confirmado.'},
+     pt:'Boa tarde Rui! Sim, está confirmado: pedido B-0418, 1 frango no carvão, batata frita caseira e feijão preto, para levantar às 19h30. Estimado ~28€ — pagas ao levantar; o preço certo é ao pesar. Até logo!\n\nBrasa do Bairro',
+     en:'Good afternoon Rui! Yes, it is confirmed: order B-0418, 1 charcoal chicken, homemade fries and black beans, for pickup at 19:30. Estimated ~28€ — you pay when you collect; the exact price is set at the scale. See you tonight!\n\nBrasa do Bairro',
+     decision:'auto', why:['Answered at 15:41 · shop closed 14h30–18h · nobody at the counter.','Status read from the order board, not assumed.','Owner not interrupted · sees it in the evening digest.'], ms:[520,1600,1900]},
+    {id:3, name:'Emma Whitaker', chan:'Email', time:'10:20', lang:'en', kind:'email', email:'emma.whitaker@example.com', subject:'Opening hours + delivery?',
+     text:'Hi! We are staying in Graça this week and keep walking past your grill. What are your opening hours, and do you deliver to our apartment?',
+     ref:null, guide:[['source','Shop guide'],['hours','Ter–Dom 12h–14h30 / 18h–21h30 · closed Mon'],['pickup','at the counter · pay at weighing'],['delivery','Uber Eats · direct WhatsApp orders for pickup, no commission']],
+     verify:{ok:true, line:'No order to verify · answered from the shop guide (hours, pickup, delivery).'},
+     en:'Hi Emma, welcome to the neighbourhood! We are open Tuesday to Sunday, 12:00–14:30 and 18:00–21:30, closed on Mondays. Pickup is at the counter; delivery runs through Uber Eats. If you order directly on WhatsApp for pickup there is no app commission, and you pay at the counter when it is weighed. See you soon!\n\nBrasa do Bairro',
+     pt:'Olá Emma, bem-vinda ao bairro! Estamos abertos de terça a domingo, 12h–14h30 e 18h–21h30, fechados à segunda. O levantamento é ao balcão; entregas são pela Uber Eats. Se encomendar diretamente por WhatsApp para levantar, é sem comissões, e paga ao balcão ao pesar. Até breve!\n\nBrasa do Bairro',
+     decision:'auto', why:['Information request · no order to verify.','Answer from the shop guide · no judgement needed.','Reply sent · direct WhatsApp orders steered, no commission.'], ms:[480,1580,1850]},
+    {id:4, name:'Paulo Antunes', chan:'WhatsApp', time:'12:30', lang:'pt', kind:'chat', phone:'+351 9•• ••• 655',
+     text:'Boa tarde! Somos 15 pessoas no sábado à noite. Dava para encomendar frango, entrecosto e picanha para levantar às 20h? Que preço ficava?',
+     ref:'B-0423', verify:{ok:true, line:'Group order · 15 pax · Sat 20 Sep 20h00 is inside evening service. Logged as B-0423, quote pending.'},
+     pt:'Boa tarde Paulo, obrigado! Para 15 pessoas o dono faz o orçamento diretamente e responde-te ainda hoje. Já anotámos: sábado 20 set, levantar às 20h, frango + entrecosto + picanha (pedido B-0423). Como referência, contamos ~350 g de carne por pessoa.\n\nBrasa do Bairro',
+     en:'Good afternoon Paulo, thank you! For 15 people the owner quotes directly and will reply to you today. We have noted: Saturday 20 Sep, pickup at 20:00, chicken + ribs + picanha (order B-0423). As a guide, we count ~350 g of meat per person.\n\nBrasa do Bairro',
+     decision:'esc', why:['Group order above 8 pax · commercial gate, the owner quotes.','Date and time checked against service hours · logged on the board.','Reply drafted and held.'], held:'Draft held · goes out when the owner confirms', ms:[700,1900,2300],
+     confirmPT:'Boa tarde Paulo, confirmado pelo dono: 3 frangos, ~2 kg de entrecosto e ~1,5 kg de picanha, com arroz e batata frita para 15, sábado às 20h. Estimado ~190€ — pagas ao levantar; o preço certo é ao pesar. Obrigado!\n\nBrasa do Bairro',
+     confirmEN:'Good afternoon Paulo, confirmed by the owner: 3 chickens, ~2 kg of ribs and ~1.5 kg of picanha, with rice and fries for 15, Saturday at 20:00. Estimated ~190€ — you pay when you collect; the exact price is set at the scale. Thank you!\n\nBrasa do Bairro'},
+    {id:5, name:'Cláudia Mendes', chan:'WhatsApp', time:'14:05', lang:'pt', kind:'chat', urgent:true, phone:'+351 9•• ••• 289',
+     text:'O frango que levantei às 13h estava mal passado junto ao osso. Não é normal, nunca tinha acontecido.',
+     ref:'B-0409', verify:{ok:true, line:'Order B-0409 matches · collected 13h02 · 1 frango no carvão, left grill.'},
+     pt:'Olá Cláudia, lamentamos muito — não devia acontecer. Por favor não comas a parte mal passada. Já passámos ao dono, que te responde pessoalmente ainda hoje. Pedido B-0409 registado.\n\nBrasa do Bairro',
+     en:'Hi Cláudia, we are very sorry — this should not happen. Please do not eat the undercooked part. We have passed it to the owner, who will reply to you personally today. Order B-0409 is on record.\n\nBrasa do Bairro',
+     decision:'esc', why:['Food-safety and reputation signal: undercooked meat · always a human decision.','Owner phoned and texted at 14:05.','Holding reply sent so the customer is not left waiting.'], held:'Holding reply sent · owner will answer personally', ms:[480,1500,1700],
+     confirmPT:'Olá Cláudia, da parte do dono: pedimos desculpa. Amanhã tens um frango novo por nossa conta, é só dizeres a hora — ou devolvemos o valor, como preferires. A grelha da esquerda já foi verificada.\n\nBrasa do Bairro',
+     confirmEN:'Hi Cláudia, from the owner: we apologise. Tomorrow you have a new chicken on the house, just tell us the time — or we refund you, whichever you prefer. The left grill has already been checked.\n\nBrasa do Bairro'},
+    {id:6, name:'Liam O\'Connor', chan:'Uber Eats inbox', time:'18:40', lang:'en', kind:'thread',
+     text:'Hi, does the piri-piri sauce contain any nuts? Severe allergy, so I need to be sure.',
+     ref:'B-0421', verify:{ok:true, line:'Order B-0421 matches · piri-piri à parte, pickup at the counter 19h00 · allergen note read from the board.'},
+     en:'Hi Liam, no — our piri-piri is made in-house from malagueta chillies, garlic, olive oil, vinegar and salt. None of the house sauces contain nuts. For a severe allergy, please also confirm with us at the counter when collecting — we\'ll double-check with the kitchen.\n\nBrasa do Bairro',
+     pt:'Olá Liam, não — o nosso piri-piri é feito na casa com malagueta, alho, azeite, vinagre e sal. Nenhum molho da casa leva frutos secos. Por ser uma alergia grave, confirma também connosco ao balcão quando levantares — verificamos outra vez com a cozinha.\n\nBrasa do Bairro',
+     decision:'auto', why:['Allergen answer quoted from the note on the board · never inferred.','Severe allergy · the reply leaves a margin: confirm at the counter, kitchen double-checks.','Reply sent.'], ms:[540,1650,1950]}
   ];
 
   var state = {}; // id -> 'new' | 'auto' | 'esc' | 'conf'
@@ -335,14 +377,14 @@ footer a{color:var(--teal)}
 
   function plusMinutes(t, add){ var p=t.split(':'), tot=(+p[0])*60+(+p[1])+add; return String(Math.floor(tot/60)%24).padStart(2,'0')+':'+String(tot%60).padStart(2,'0'); }
   function initials(n){ return n.split(' ').map(function(p){return p[0];}).join(''); }
-  function chanLabel(c){ return {'Booking inbox':'Booking','Email':'Email','WhatsApp':'WhatsApp','Channel Talk':'Channel Talk'}[c]||c; }
+  function chanLabel(c){ return {'Uber Eats inbox':'Uber Eats','Email':'Email','WhatsApp':'WhatsApp'}[c]||c; }
   function statusLabel(s){ return {new:'New', auto:'Auto-answered', esc:'Escalated', conf:'Confirmed'}[s]; }
 
   function renderLedger(){
     var tb = $('ledger-table').tBodies[0]; tb.innerHTML='';
-    BOOKINGS.forEach(function(b){
+    ORDERS.forEach(function(b){
       var tr = document.createElement('tr'); tr.dataset.ref=b.ref;
-      tr.innerHTML = '<td>'+b.ref+'</td><td>'+b.guest+'</td><td>'+b.room+'</td><td>'+b.in+'</td><td>'+b.out+'</td><td>'+b.pax+'</td><td>'+b.src+'</td><td>'+b.notes+'</td>';
+      tr.innerHTML = '<td>'+b.ref+'</td><td>'+b.guest+'</td><td>'+b.items+'</td><td>'+b.pickup+'</td><td class="est">'+b.est+'</td><td>'+b.status+'</td>';
       tb.appendChild(tr);
     });
   }
@@ -371,18 +413,19 @@ footer a{color:var(--teal)}
   function open(id){
     var m = MESSAGES.filter(function(x){return x.id===id;})[0]; if(!m) return;
     clearTimers(); current=id;
-    var b = BOOKINGS.filter(function(x){return x.ref===m.ref;})[0];
+    var b = ORDERS.filter(function(x){return x.ref===m.ref;})[0];
 
     $('empty').hidden=true; $('work').hidden=false;
     detail.classList.add('open'); app.classList.add('detail-on');
     detail.scrollTop=0; if(window.innerWidth<820) window.scrollTo(0,0);
     $('d-avatar').textContent=initials(m.name); $('d-who').textContent=m.name;
-    $('d-chan').textContent=m.chan+' · '+m.time; $('d-text').textContent=m.text; $('d-time').textContent='received '+m.time;
+    $('d-chan').textContent=m.chan+' · '+m.time; $('d-text').textContent=m.text; $('d-time').innerHTML='received '+m.time+(m.closed?'<br><span class="closed">shop closed 14h30–18h · answered by the loop</span>':'');
     renderIncoming(m); renderTabs(m); renderFrame(m);
 
     // reset steps
     ['s-verify','s-draft','s-decide'].forEach(function(s){ $(s).classList.remove('in'); });
-    $('v-ms').innerHTML='<span class="spin"></span> looking up'; $('v-kv').innerHTML=''; $('v-check').innerHTML='';
+    $('v-lab').textContent = m.ticket ? '1 · Capture order' : '1 · Check the board';
+    $('v-ms').innerHTML='<span class="spin"></span> '+(m.ticket?'reading the order':'looking up'); $('v-kv').innerHTML=''; $('v-kv').hidden=false; $('v-ticket').hidden=true; $('v-ticket').innerHTML=''; $('v-check').innerHTML='';
     $('d-ms').textContent=''; $('r-pt').textContent=''; $('r-en').textContent=''; $('r-held').hidden=true; $('frame-foot').textContent='';
     $('x-ms').textContent=''; $('x-badge').innerHTML=''; $('x-why').innerHTML=''; $('x-gate').hidden=true;
     setLang(m.lang);
@@ -395,7 +438,13 @@ footer a{color:var(--teal)}
     later(function(){ $('s-verify').classList.add('in'); }, 60);
     later(function(){
       $('v-ms').textContent = (t[0]/1000).toFixed(2)+'s';
-      $('v-kv').innerHTML = '<dt>ref</dt><dd>'+b.ref+'</dd><dt>guest</dt><dd>'+b.guest+'</dd><dt>room</dt><dd>'+b.room+'</dd><dt>stay</dt><dd>'+b.in+' → '+b.out+' · '+b.pax+(b.pax===1?' guest':' guests')+'</dd><dt>source</dt><dd>'+b.src+'</dd><dt>notes</dt><dd>'+b.notes+'</dd>';
+      if(m.ticket){
+        $('v-kv').hidden=true; $('v-ticket').hidden=false; $('v-ticket').innerHTML=renderTicket(m.ticket);
+      } else if(b){
+        $('v-kv').innerHTML = '<dt>no.</dt><dd>'+b.ref+'</dd><dt>cliente</dt><dd>'+b.guest+'</dd><dt>itens</dt><dd>'+b.items+'</dd><dt>levantar</dt><dd>'+b.pickup+'</dd><dt>est.</dt><dd>'+b.est+' · preço final ao pesar</dd><dt>estado</dt><dd>'+b.status+'</dd>';
+      } else {
+        $('v-kv').innerHTML = m.guide.map(function(g){ return '<dt>'+g[0]+'</dt><dd>'+g[1]+'</dd>'; }).join('');
+      }
       $('v-check').innerHTML = '<span class="'+(m.verify.ok?'ok':'warn')+'">'+(m.verify.ok?'✓':'!')+'</span><span>'+m.verify.line+'</span>';
     }, t[0]);
     // step 2
@@ -443,24 +492,29 @@ footer a{color:var(--teal)}
     $('frame-foot').textContent = footFor({time:plusMinutes(m.time,19), kind:m.kind, chan:m.chan}, 'sent');
   }
 
+  function renderTicket(t){
+    return '<div class="ticket"><div class="tk-head"><span>Talão de cozinha</span><span>'+t.no+'</span></div>'+
+      t.lines.map(function(l){ return '<div class="tk-line"><span>'+l[0]+'</span><span>'+l[1]+'</span><span>'+l[2]+'</span></div>'; }).join('')+
+      '<div class="tk-foot"><span>levantar <b>'+t.pickup+'</b></span><span>est. <b>'+t.est+'</b> · preço final ao pesar</span></div></div>';
+  }
   function renderIncoming(m){
     var b=$('bubble'), h=$('d-head');
     b.className='bubble '+m.kind;
     if(m.kind==='email'){ h.hidden=false; h.innerHTML='<b>From</b> '+m.email+'<br><b>Subject</b> '+m.subject; }
-    else if(m.kind==='thread'){ h.hidden=false; h.innerHTML='<b>Via</b> '+m.chan+' · reservation '+m.ref; }
+    else if(m.kind==='thread'){ h.hidden=false; h.innerHTML='<b>Via</b> '+m.chan+' · order '+m.ref; }
     else { h.hidden=false; h.innerHTML='<b>'+m.chan+'</b> · '+m.phone; }
   }
   function renderTabs(m){
     var order = m.lang==='pt' ? ['pt','en'] : ['en','pt'];
     $('tabs').innerHTML = order.map(function(l,i){
-      return '<button class="tab" role="tab" aria-selected="'+(i===0)+'" data-lang="'+l+'" type="button">'+l.toUpperCase()+(i===0?' · guest':'')+'</button>';
+      return '<button class="tab" role="tab" aria-selected="'+(i===0)+'" data-lang="'+l+'" type="button">'+l.toUpperCase()+(i===0?' · customer':'')+'</button>';
     }).join('');
   }
   function renderFrame(m){
     var f=$('frame'), h=$('frame-head');
     f.className='frame '+m.kind;
     if(m.kind==='email'){ h.innerHTML='<b>To</b> '+m.email+'<br><b>Subject</b> Re: '+m.subject; }
-    else if(m.kind==='thread'){ h.innerHTML='<span><b>Reply via</b> '+m.chan+'</span><span>reservation '+m.ref+'</span>'; }
+    else if(m.kind==='thread'){ h.innerHTML='<span><b>Reply via</b> '+m.chan+'</span><span>order '+m.ref+'</span>'; }
     else { h.innerHTML='<b>'+m.chan+'</b> → '+m.name; }
   }
   function footFor(m, st){
@@ -494,7 +548,7 @@ footer a{color:var(--teal)}
     var m = MESSAGES.filter(function(x){return x.id===current;})[0]; if(!m) return;
     state[m.id]='conf'; showConfirmed(m); renderList();
   });
-  $('reset').addEventListener('click', function(){ state={}; close(); $('ledger').open=false; });
+  $('reset').addEventListener('click', function(){ state={}; close(); $('ledger').open=false; $('menu').open=false; });
   document.addEventListener('keydown', function(e){ if(e.key==='Escape' && current!==null) close(); });
 
   renderLedger(); renderList();
