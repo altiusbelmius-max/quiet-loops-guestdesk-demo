@@ -1,0 +1,432 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="color-scheme" content="light">
+<title>Casa Miradouro · Front Desk</title>
+<meta name="description" content="Quiet Loops guest-desk demo: a fictional Lisbon guesthouse inbox where the loop verifies the booking, drafts a bilingual reply, and escalates to the owner when it matters.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Sora:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --porcelain:#F6F7F7; --ink:#1B1E22; --slate:#5C666D; --teal:#234B57; --lilac:#9A8FBF; --hair:#DDE1E2; --card:#FFFFFF;
+  --display:"Instrument Serif",Georgia,serif; --body:"Sora",system-ui,sans-serif; --mono:"IBM Plex Mono",ui-monospace,monospace;
+  --teal-soft:#E6EEF0; --lilac-soft:#EEEBF5; --amber:#8A5A16; --amber-soft:#F6EEDC;
+  --r:14px; --gutter:16px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--porcelain);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;min-height:100dvh}
+button{font:inherit;color:inherit;background:none;border:0;padding:0;cursor:pointer}
+button:focus-visible,[tabindex]:focus-visible{outline:2px solid var(--teal);outline-offset:2px;border-radius:6px}
+.mono{font-family:var(--mono);font-size:12px;letter-spacing:.01em}
+.serif{font-family:var(--display);font-weight:400}
+
+/* promise strip */
+.promise{background:var(--ink);color:var(--porcelain);font-family:var(--mono);font-size:12px;line-height:1.4;padding:10px var(--gutter);text-align:center;letter-spacing:.01em}
+.promise span{white-space:nowrap}
+@media (max-width:480px){.promise{display:grid;grid-template-columns:1fr 1fr;gap:2px 0;text-align:center}.promise .dot{display:none}}
+.promise .dot{opacity:.45;margin:0 .45em}
+
+/* header */
+header.top{padding:18px var(--gutter) 10px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;max-width:1080px;margin:0 auto}
+header.top h1{font-family:var(--display);font-weight:400;font-size:30px;line-height:1.05;margin:0}
+header.top h1 em{font-style:italic;color:var(--teal)}
+header.top .sub{color:var(--slate);font-size:13px;margin-top:4px}
+.pill{display:inline-block;font-family:var(--mono);font-size:11px;letter-spacing:.04em;text-transform:uppercase;padding:3px 8px;border-radius:999px;border:1px solid var(--hair);color:var(--slate);background:var(--card);white-space:nowrap}
+.reset{font-size:13px;color:var(--slate);text-decoration:underline;text-underline-offset:3px;margin-top:6px}
+.reset:hover{color:var(--ink)}
+
+/* layout */
+.app{max-width:1080px;margin:0 auto;padding:0 var(--gutter) 24px;position:relative}
+.pane{background:var(--card);border:1px solid var(--hair);border-radius:var(--r)}
+.inbox-head{display:flex;align-items:baseline;justify-content:space-between;padding:14px 16px 8px}
+.inbox-head h2{font-family:var(--display);font-weight:400;font-size:22px;margin:0}
+.inbox-head .count{color:var(--slate)}
+.msg-list{list-style:none;margin:0;padding:0}
+.msg{width:100%;text-align:left;display:grid;grid-template-columns:36px 1fr auto;gap:12px;padding:14px 16px;border-top:1px solid var(--hair);align-items:start;transition:background .15s}
+.msg:hover{background:var(--porcelain)}
+.msg[aria-current="true"]{background:var(--teal-soft)}
+.avatar{width:36px;height:36px;border-radius:50%;background:var(--porcelain);border:1px solid var(--hair);display:grid;place-items:center;font-family:var(--display);font-size:16px;color:var(--teal)}
+.msg .who{font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.msg .chan{font-family:var(--mono);font-size:11px;color:var(--slate);font-weight:400}
+.msg .preview{color:var(--slate);font-size:13.5px;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.msg .meta{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.msg .time{font-family:var(--mono);font-size:11px;color:var(--slate)}
+.status{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid var(--hair);color:var(--slate);background:var(--card)}
+.status.new{color:var(--ink);border-color:var(--ink)}
+.status.auto{color:var(--teal);border-color:var(--teal);background:var(--teal-soft)}
+.status.esc{color:#5E5290;border-color:var(--lilac);background:var(--lilac-soft)}
+.status.conf{color:var(--teal);border-color:var(--teal);background:var(--card)}
+
+/* ledger */
+.ledger{margin-top:14px}
+.ledger summary{cursor:pointer;padding:12px 16px;font-family:var(--mono);font-size:12px;color:var(--slate);list-style:none;display:flex;justify-content:space-between}
+.ledger summary::-webkit-details-marker{display:none}
+.ledger summary::after{content:"+";font-size:14px}
+.ledger[open] summary::after{content:"–"}
+.ledger table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11.5px}
+.ledger th,.ledger td{text-align:left;padding:8px 10px;border-top:1px solid var(--hair);white-space:nowrap}
+.ledger th{color:var(--slate);font-weight:500}
+.ledger .wrap{overflow-x:auto;padding:0 6px 6px;max-width:100%}
+.ledger{min-width:0;overflow:hidden}
+.ledger tr.hl td{background:var(--teal-soft)}
+
+/* detail */
+.detail{display:none}
+.detail.open{display:block}
+.detail-head{display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--hair)}
+.back{font-size:14px;color:var(--teal);display:inline-flex;align-items:center;gap:4px}
+.detail-head .who{font-weight:600}
+.detail-head .chan{font-family:var(--mono);font-size:11px;color:var(--slate)}
+.bubble{margin:16px 16px 4px;background:var(--porcelain);border:1px solid var(--hair);border-radius:16px 16px 16px 4px;padding:12px 14px;font-size:15px}
+.bubble .t{font-family:var(--mono);font-size:11px;color:var(--slate);margin-top:6px}
+
+.steps{padding:8px 16px 16px;display:grid;gap:12px}
+.step{border:1px solid var(--hair);border-radius:12px;padding:12px 14px;opacity:0;transform:translateY(6px);transition:opacity .35s,transform .35s}
+.step.in{opacity:1;transform:none}
+.step .lab{display:flex;align-items:center;justify-content:space-between;gap:8px;font-family:var(--mono);font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);margin-bottom:8px}
+.step .lab b{font-weight:500;color:var(--ink)}
+.step .lab .ms{color:var(--slate);letter-spacing:0;text-transform:none}
+.spin{display:inline-block;width:10px;height:10px;border:2px solid var(--hair);border-top-color:var(--teal);border-radius:50%;animation:sp .8s linear infinite;vertical-align:-1px}
+@keyframes sp{to{transform:rotate(360deg)}}
+.pulse{display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--lilac);animation:pu 1.4s ease-in-out infinite;vertical-align:0}
+@keyframes pu{0%,100%{opacity:.35}50%{opacity:1}}
+
+.kv{display:grid;grid-template-columns:auto 1fr;gap:4px 14px;font-size:13.5px}
+.kv dt{font-family:var(--mono);font-size:11px;color:var(--slate);padding-top:3px}
+.kv dd{margin:0}
+.check{margin-top:10px;padding-top:10px;border-top:1px dashed var(--hair);font-size:13.5px;display:flex;gap:8px;align-items:flex-start}
+.check .ok{color:var(--teal);font-weight:600}
+.check .warn{color:var(--amber);font-weight:600}
+
+.tabs{display:flex;gap:6px;margin-bottom:8px}
+.tab{font-family:var(--mono);font-size:11px;padding:4px 10px;border-radius:999px;border:1px solid var(--hair);color:var(--slate)}
+.tab[aria-selected="true"]{background:var(--ink);color:var(--porcelain);border-color:var(--ink)}
+.reply{font-family:var(--display);font-size:17.5px;line-height:1.4;white-space:pre-line}
+.reply.hidden{display:none}
+.held{margin-top:8px;font-family:var(--mono);font-size:11px;color:#5E5290}
+
+.badge{display:inline-flex;align-items:center;gap:8px;font-family:var(--mono);font-size:12px;letter-spacing:.08em;text-transform:uppercase;padding:8px 12px;border-radius:8px;font-weight:500}
+.badge.auto{background:var(--teal);color:var(--porcelain)}
+.badge.esc{background:var(--lilac);color:var(--ink)}
+.why{margin-top:10px;font-size:13.5px;color:var(--ink)}
+.why ul{margin:6px 0 0;padding-left:18px}
+.why li{margin:2px 0}
+.gate{margin-top:12px;padding:10px 12px;border-radius:10px;background:var(--lilac-soft);border:1px solid var(--lilac);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:10px}
+.gate .st{font-family:var(--mono);font-size:12px;color:#5E5290;display:flex;align-items:center;gap:8px}
+.gate .confirm{background:var(--ink);color:var(--porcelain);padding:8px 14px;border-radius:8px;font-size:13px;font-weight:500}
+.gate .confirm:hover{background:var(--teal)}
+.gate.done{background:var(--teal-soft);border-color:var(--teal)}
+.gate.done .st{color:var(--teal)}
+
+.empty{padding:40px 24px;text-align:center;color:var(--slate)}
+.empty .serif{font-size:22px;color:var(--ink)}
+
+footer{max-width:1080px;margin:0 auto;padding:8px var(--gutter) 40px;color:var(--slate);font-size:13px}
+footer .chan{font-family:var(--mono);font-size:12px;color:var(--ink);margin-bottom:6px}
+footer a{color:var(--teal)}
+
+/* phone: detail is a sheet over the list */
+@media (max-width:819px){
+  .detail.open{position:fixed;inset:0;z-index:5;background:var(--card);border-radius:0;border:0;overflow-y:auto;padding-bottom:env(safe-area-inset-bottom)}
+  .app.detail-on .inbox{display:none}
+}
+/* desktop: two panes */
+@media (min-width:820px){
+  .app{display:grid;grid-template-columns:380px 1fr;gap:16px;align-items:start}
+  .inbox{grid-column:1}
+  .ledger{grid-column:1}
+  .detail{display:block;grid-column:2;grid-row:1/span 2;position:sticky;top:16px;min-height:520px}
+  .back{display:none}
+  header.top h1{font-size:36px}
+}
+@media (prefers-reduced-motion:reduce){
+  .step{transition:none}.spin,.pulse{animation:none}
+}
+</style>
+</head>
+<body>
+
+<div class="promise" role="doc-subtitle">
+  <span>answered in seconds</span><span class="dot">·</span><span>escalated when it matters</span><span class="dot">·</span><span>watched by machines</span><span class="dot">·</span><span>confirmed by a human</span>
+</div>
+
+<header class="top">
+  <div>
+    <h1>Casa <em>Miradouro</em></h1>
+    <div class="sub">Front desk · Alfama, Lisboa · 6 rooms · Wed 17 Sep</div>
+  </div>
+  <div style="text-align:right">
+    <span class="pill">Demo · fictional data</span><br>
+    <button class="reset" id="reset" type="button">Reset demo</button>
+  </div>
+</header>
+
+<main class="app" id="app">
+  <section class="pane inbox" aria-labelledby="inbox-h">
+    <div class="inbox-head">
+      <h2 id="inbox-h">Inbox</h2>
+      <span class="mono count" id="count">6 messages · 6 new</span>
+    </div>
+    <ul class="msg-list" id="list"></ul>
+  </section>
+
+  <details class="pane ledger" id="ledger">
+    <summary><span>Bookings ledger (mock data the loop checks against)</span></summary>
+    <div class="wrap">
+      <table id="ledger-table">
+        <thead><tr><th>Ref</th><th>Guest</th><th>Room</th><th>Check-in</th><th>Check-out</th><th>Pax</th><th>Source</th><th>Notes</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </details>
+
+  <section class="pane detail" id="detail" aria-live="polite">
+    <div class="empty" id="empty">
+      <div class="serif">Tap a message.</div>
+      <div>The loop verifies the booking, drafts a reply in Portuguese and English, and decides whether a human needs to see it.</div>
+    </div>
+    <div id="work" hidden>
+      <div class="detail-head">
+        <button class="back" id="back" type="button" aria-label="Back to inbox">← Inbox</button>
+        <div class="avatar" id="d-avatar"></div>
+        <div><div class="who" id="d-who"></div><div class="chan" id="d-chan"></div></div>
+      </div>
+      <div class="bubble"><div id="d-text"></div><div class="t" id="d-time"></div></div>
+      <div class="steps">
+        <div class="step" id="s-verify">
+          <div class="lab"><b>1 · Verify booking</b><span class="ms" id="v-ms"><span class="spin"></span> looking up</span></div>
+          <dl class="kv" id="v-kv"></dl>
+          <div class="check" id="v-check"></div>
+        </div>
+        <div class="step" id="s-draft">
+          <div class="lab"><b>2 · Draft reply</b><span class="ms" id="d-ms"></span></div>
+          <div class="tabs" role="tablist">
+            <button class="tab" role="tab" aria-selected="true" data-lang="pt" type="button">PT</button>
+            <button class="tab" role="tab" aria-selected="false" data-lang="en" type="button">EN</button>
+          </div>
+          <div class="reply" id="r-pt"></div>
+          <div class="reply hidden" id="r-en"></div>
+          <div class="held" id="r-held" hidden></div>
+        </div>
+        <div class="step" id="s-decide">
+          <div class="lab"><b>3 · Decide</b><span class="ms" id="x-ms"></span></div>
+          <div id="x-badge"></div>
+          <div class="why" id="x-why"></div>
+          <div class="gate" id="x-gate" hidden>
+            <span class="st"><span class="pulse"></span> Waiting for owner confirmation</span>
+            <button class="confirm" id="confirm" type="button">Owner confirms</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>
+  <div class="chan">Connects to what you already use — WhatsApp, email, Channel Talk, booking inboxes.</div>
+  <div>Every reply is logged. Every escalation is a human decision. A <a href="#" rel="noopener">Quiet Loops</a> demo — guesthouse, guests and bookings are fictional.</div>
+</footer>
+
+<script>
+(function(){
+  'use strict';
+  // ---- mock data (all fictional) ----
+  var BOOKINGS = [
+    {ref:'CM-2411', guest:'Sofia Ribeiro',  room:'3', in:'15 Sep', out:'19 Sep', pax:2, src:'Booking inbox', notes:'In-house · pt'},
+    {ref:'CM-2418', guest:'Daniel Kessler', room:'1', in:'17 Sep', out:'20 Sep', pax:1, src:'Email',         notes:'Arrives today 15:00 · en'},
+    {ref:'CM-2425', guest:'Marta Lopes',    room:'4', in:'26 Sep', out:'29 Sep', pax:2, src:'WhatsApp',      notes:'Flexible rate · pt'},
+    {ref:'CM-2407', guest:'James Okafor',   room:'2', in:'14 Sep', out:'18 Sep', pax:2, src:'WhatsApp',      notes:'Room 2 next arrival 19 Sep · en'},
+    {ref:'CM-2430', guest:'Inês Faria',     room:'6', in:'20 Sep', out:'22 Sep', pax:2, src:'Channel Talk',  notes:'Breakfast incl. · pt'},
+    {ref:'CM-2414', guest:'Tom Hale',       room:'5', in:'16 Sep', out:'19 Sep', pax:2, src:'WhatsApp',      notes:'In-house · en'}
+  ];
+
+  var MESSAGES = [
+    {id:1, name:'Sofia Ribeiro', chan:'Booking inbox', time:'08:12', lang:'pt',
+     text:'Bom dia! A luz da casa de banho do quarto 3 não acende desde ontem à noite. Podem ver?',
+     ref:'CM-2411', verify:{ok:true, line:'Booking matches · guest is in-house (room 3, 15–19 Sep).'},
+     pt:'Bom dia Sofia, obrigado por avisar. Já registámos a avaria (ticket M-118) e a nossa manutenção passa pelo quarto 3 hoje até às 12:00. Entretanto, o candeeiro de pé junto à cama funciona. Bom dia!',
+     en:'Good morning Sofia, thank you for letting us know. We have logged the fault (ticket M-118) and our maintenance will come by room 3 today before 12:00. In the meantime, the floor lamp by the bed works. Have a good day!',
+     decision:'auto', why:['Non-urgent fault, guest verified in-house.','Maintenance ticket M-118 opened and assigned.','Reply sent · owner sees it in the morning digest.'], ms:[640,1780,2100]},
+    {id:2, name:'Daniel Kessler', chan:'Email', time:'09:41', lang:'en',
+     text:'Hi, arriving this afternoon. What is the wifi password? Need to join a call at 16:00.',
+     ref:'CM-2418', verify:{ok:true, line:'Booking matches · arrives today (room 1, 17–20 Sep).'},
+     pt:'Olá Daniel, bem-vindo! A rede é "CasaMiradouro" e a palavra-passe é "alfama1900". O quarto 1 está pronto a partir das 15:00, mas pode chegar mais cedo e trabalhar na sala. Até já!',
+     en:'Hi Daniel, welcome! The network is "CasaMiradouro" and the password is "alfama1900". Room 1 is ready from 15:00, but you are welcome earlier to work from the lounge. See you soon!',
+     decision:'auto', why:['Information request, booking verified.','Answer from the house guide · no judgement needed.','Reply sent.'], ms:[520,1610,1900]},
+    {id:3, name:'Marta Lopes', chan:'WhatsApp', time:'10:05', lang:'pt',
+     text:'Olá! Será possível mudar a nossa reserva de 26–29 set para 3–6 out? Surgiu um imprevisto no trabalho.',
+     ref:'CM-2425', verify:{ok:true, line:'Booking matches · future stay (room 4, 26–29 Sep). Availability pre-checked: room 4 is free 3–6 Oct.'},
+     pt:'Olá Marta, obrigado pela mensagem. Consultámos e temos disponibilidade para 3–6 de outubro. A alteração precisa da confirmação da proprietária, que responde ainda hoje. Entretanto, guardamos as novas datas para si.',
+     en:'Hi Marta, thank you for your message. We checked and have availability for 3–6 October. The change needs the owner\'s confirmation, which you will have today. In the meantime we are holding the new dates for you.',
+     decision:'esc', why:['Booking modification · never changed without the owner.','Availability checked so the owner decides in one tap.','Reply drafted and held.'], held:'Draft held · goes out when the owner confirms', ms:[700,1900,2300],
+     confirmPT:'Confirmado! A sua reserva passa para 3–6 de outubro, quarto 4, ao mesmo preço. Até breve!',
+     confirmEN:'Confirmed! Your booking now runs 3–6 October, room 4, at the same rate. See you soon!'},
+    {id:4, name:'James Okafor', chan:'WhatsApp', time:'10:37', lang:'en',
+     text:'Morning! Our flight tomorrow is at 19:00. Any chance of a late checkout?',
+     ref:'CM-2407', verify:{ok:true, line:'Booking matches · checks out tomorrow (room 2, 14–18 Sep). Room 2 has no arrival on 18 Sep.'},
+     pt:'Bom dia James! Sim, o quarto 2 está livre amanhã, por isso pode ficar até às 13:00 sem custo. Se precisar até mais tarde, guardamos as malas na receção. Boa viagem!',
+     en:'Morning James! Yes, room 2 is free tomorrow, so you can stay until 13:00 at no charge. If you need longer, we will keep your bags at reception. Safe travels!',
+     decision:'auto', why:['House rule: late checkout to 13:00 is free when the room is unbooked.','Rule checked against the ledger · passed.','Reply sent.'], ms:[610,1720,2050]},
+    {id:5, name:'Inês Faria', chan:'Channel Talk', time:'11:20', lang:'pt',
+     text:'Boa tarde, o pequeno-almoço está incluído? E têm opção vegetariana? Obrigada!',
+     ref:'CM-2430', verify:{ok:true, line:'Booking matches · future stay (room 6, 20–22 Sep). Rate includes breakfast.'},
+     pt:'Boa tarde Inês! Sim, o pequeno-almoço está incluído na sua reserva e é servido das 8:00 às 10:30 no terraço. Temos sempre opção vegetariana (ovos, fruta, pão da padaria do bairro, queijos). Até dia 20!',
+     en:'Good afternoon Inês! Yes, breakfast is included in your booking and is served 8:00–10:30 on the terrace. There is always a vegetarian option (eggs, fruit, bread from the local bakery, cheeses). See you on the 20th!',
+     decision:'auto', why:['Information request, booking verified.','Answer from the house guide.','Reply sent.'], ms:[540,1650,1950]},
+    {id:6, name:'Tom Hale', chan:'WhatsApp', time:'11:48', lang:'en',
+     text:'There is water coming through the ceiling in room 5, dripping onto the bed. It\'s getting worse.',
+     ref:'CM-2414', verify:{ok:true, line:'Booking matches · guest is in-house (room 5, 16–19 Sep).'},
+     pt:'Tom, lamentamos muito. Já avisámos a proprietária, que está a caminho. Por favor afaste as malas da zona molhada. Se quiser, o quarto 6 está livre esta noite e podemos mudá-lo já.',
+     en:'Tom, we are very sorry. We have alerted the owner, who is on the way. Please move your bags away from the wet area. If you like, room 6 is free tonight and we can move you now.',
+     decision:'esc', why:['Emergency signal: water leak · always a human decision.','Owner phoned and texted at 11:48.','Holding reply sent so the guest is not left waiting.'], held:'Holding reply sent · owner on the way', ms:[480,1500,1700],
+     confirmPT:'A proprietária chegou e está no quarto 5. Mudámos a sua reserva para o quarto 6 esta noite. Obrigado pela paciência.',
+     confirmEN:'The owner has arrived and is in room 5. We have moved your stay to room 6 for tonight. Thank you for your patience.'}
+  ];
+
+  var state = {}; // id -> 'new' | 'auto' | 'esc' | 'conf'
+  var timers = [];
+  var current = null;
+
+  var $ = function(id){ return document.getElementById(id); };
+  var list = $('list'), app = $('app'), detail = $('detail');
+
+  function plusMinutes(t, add){ var p=t.split(':'), tot=(+p[0])*60+(+p[1])+add; return String(Math.floor(tot/60)%24).padStart(2,'0')+':'+String(tot%60).padStart(2,'0'); }
+  function initials(n){ return n.split(' ').map(function(p){return p[0];}).join(''); }
+  function statusLabel(s){ return {new:'New', auto:'Auto-answered', esc:'Escalated', conf:'Confirmed'}[s]; }
+
+  function renderLedger(){
+    var tb = $('ledger-table').tBodies[0]; tb.innerHTML='';
+    BOOKINGS.forEach(function(b){
+      var tr = document.createElement('tr'); tr.dataset.ref=b.ref;
+      tr.innerHTML = '<td>'+b.ref+'</td><td>'+b.guest+'</td><td>'+b.room+'</td><td>'+b.in+'</td><td>'+b.out+'</td><td>'+b.pax+'</td><td>'+b.src+'</td><td>'+b.notes+'</td>';
+      tb.appendChild(tr);
+    });
+  }
+
+  function renderList(){
+    list.innerHTML='';
+    var newCount=0;
+    MESSAGES.forEach(function(m){
+      var s = state[m.id]||'new'; if(s==='new') newCount++;
+      var li = document.createElement('li');
+      li.innerHTML = '<button class="msg" type="button" data-id="'+m.id+'" aria-current="'+(current===m.id)+'">'+
+        '<div class="avatar">'+initials(m.name)+'</div>'+
+        '<div><div class="who">'+m.name+' <span class="chan">'+m.chan+'</span></div><div class="preview">'+m.text+'</div></div>'+
+        '<div class="meta"><span class="time">'+m.time+'</span><span class="status '+s+'">'+statusLabel(s)+'</span></div></button>';
+      list.appendChild(li);
+    });
+    $('count').textContent = MESSAGES.length+' messages · '+newCount+' new';
+  }
+
+  function clearTimers(){ timers.forEach(clearTimeout); timers=[]; }
+  function later(fn, ms){ timers.push(setTimeout(fn, ms)); }
+
+  function open(id){
+    var m = MESSAGES.filter(function(x){return x.id===id;})[0]; if(!m) return;
+    clearTimers(); current=id;
+    var b = BOOKINGS.filter(function(x){return x.ref===m.ref;})[0];
+
+    $('empty').hidden=true; $('work').hidden=false;
+    detail.classList.add('open'); app.classList.add('detail-on');
+    $('d-avatar').textContent=initials(m.name); $('d-who').textContent=m.name;
+    $('d-chan').textContent=m.chan+' · '+m.time; $('d-text').textContent=m.text; $('d-time').textContent='received '+m.time;
+
+    // reset steps
+    ['s-verify','s-draft','s-decide'].forEach(function(s){ $(s).classList.remove('in'); });
+    $('v-ms').innerHTML='<span class="spin"></span> looking up'; $('v-kv').innerHTML=''; $('v-check').innerHTML='';
+    $('d-ms').textContent=''; $('r-pt').textContent=''; $('r-en').textContent=''; $('r-held').hidden=true;
+    $('x-ms').textContent=''; $('x-badge').innerHTML=''; $('x-why').innerHTML=''; $('x-gate').hidden=true;
+    setLang('pt');
+    highlightLedger(m.ref);
+
+    var already = state[m.id] && state[m.id]!=='new';
+    var t = already ? [0,0,0] : m.ms;
+
+    // step 1
+    later(function(){ $('s-verify').classList.add('in'); }, 60);
+    later(function(){
+      $('v-ms').textContent = (t[0]/1000).toFixed(2)+'s';
+      $('v-kv').innerHTML = '<dt>ref</dt><dd>'+b.ref+'</dd><dt>guest</dt><dd>'+b.guest+'</dd><dt>room</dt><dd>'+b.room+'</dd><dt>stay</dt><dd>'+b.in+' → '+b.out+' · '+b.pax+(b.pax===1?' guest':' guests')+'</dd><dt>source</dt><dd>'+b.src+'</dd><dt>notes</dt><dd>'+b.notes+'</dd>';
+      $('v-check').innerHTML = '<span class="'+(m.verify.ok?'ok':'warn')+'">'+(m.verify.ok?'✓':'!')+'</span><span>'+m.verify.line+'</span>';
+    }, t[0]);
+    // step 2
+    later(function(){
+      $('s-draft').classList.add('in');
+      $('d-ms').textContent='drafted in '+((t[1]-t[0])/1000).toFixed(1)+'s · PT + EN';
+      $('r-pt').textContent = m.pt; $('r-en').textContent = m.en;
+      if(m.held){ $('r-held').hidden=false; $('r-held').textContent = m.held; }
+    }, t[1]);
+    // step 3
+    later(function(){
+      $('s-decide').classList.add('in');
+      $('x-ms').textContent = 'total '+(t[2]/1000).toFixed(1)+'s';
+      renderDecision(m);
+    }, t[2]);
+  }
+
+  function renderDecision(m){
+    var s = state[m.id];
+    if(m.decision==='auto'){
+      $('x-badge').innerHTML='<span class="badge auto">✓ Auto-answered</span>';
+      state[m.id]='auto';
+    } else {
+      $('x-badge').innerHTML='<span class="badge esc">⚑ Escalated to owner</span>';
+      $('x-gate').hidden=false;
+      if(s==='conf'){ showConfirmed(m); } else { state[m.id]='esc'; resetGate(); }
+    }
+    $('x-why').innerHTML='<ul>'+m.why.map(function(w){return '<li>'+w+'</li>';}).join('')+'</ul>';
+    renderList();
+  }
+
+  function resetGate(){
+    var g=$('x-gate'); g.classList.remove('done');
+    g.querySelector('.st').innerHTML='<span class="pulse"></span> Waiting for owner confirmation';
+    $('confirm').hidden=false;
+  }
+
+  function showConfirmed(m){
+    var g=$('x-gate'); g.classList.add('done');
+    g.querySelector('.st').innerHTML='✓ Confirmed by owner · '+plusMinutes(m.time, 19);
+    $('confirm').hidden=true;
+    $('r-pt').textContent = m.confirmPT; $('r-en').textContent = m.confirmEN;
+    $('r-held').hidden=false; $('r-held').textContent='Sent after owner confirmation';
+  }
+
+  function setLang(l){
+    document.querySelectorAll('.tab').forEach(function(t){ t.setAttribute('aria-selected', t.dataset.lang===l); });
+    $('r-pt').classList.toggle('hidden', l!=='pt'); $('r-en').classList.toggle('hidden', l!=='en');
+  }
+
+  function highlightLedger(ref){
+    document.querySelectorAll('#ledger-table tbody tr').forEach(function(tr){ tr.classList.toggle('hl', tr.dataset.ref===ref); });
+  }
+
+  function close(){
+    current=null; clearTimers();
+    detail.classList.remove('open'); app.classList.remove('detail-on');
+    $('work').hidden=true; $('empty').hidden=false; highlightLedger(null); renderList();
+  }
+
+  // ---- events ----
+  list.addEventListener('click', function(e){
+    var b=e.target.closest('.msg'); if(b) open(+b.dataset.id);
+  });
+  document.querySelectorAll('.tab').forEach(function(t){ t.addEventListener('click', function(){ setLang(t.dataset.lang); }); });
+  $('back').addEventListener('click', close);
+  $('confirm').addEventListener('click', function(){
+    var m = MESSAGES.filter(function(x){return x.id===current;})[0]; if(!m) return;
+    state[m.id]='conf'; showConfirmed(m); renderList();
+  });
+  $('reset').addEventListener('click', function(){ state={}; close(); $('ledger').open=false; });
+  document.addEventListener('keydown', function(e){ if(e.key==='Escape' && current!==null) close(); });
+
+  renderLedger(); renderList();
+})();
+</script>
+</body>
+</html>
