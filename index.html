@@ -53,7 +53,10 @@ header.top .sub.mono{font-size:11.5px;margin-top:2px}
 .msg[aria-current="true"]{background:var(--teal-soft)}
 .avatar{width:36px;height:36px;border-radius:50%;background:var(--porcelain);border:1px solid var(--hair);display:grid;place-items:center;font-family:var(--display);font-size:16px;color:var(--teal)}
 .msg .who{font-weight:600;font-size:14px;display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.msg .chan{font-family:var(--mono);font-size:11px;color:var(--slate);font-weight:400}
+.msg .chan{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;color:var(--slate);font-weight:400;border:1px solid var(--hair);border-radius:4px;padding:1px 6px;line-height:1.5}
+.msg.needs{box-shadow:inset 3px 0 0 var(--lilac)}
+.needs-pill{font-family:var(--mono);font-size:10px;letter-spacing:.06em;text-transform:uppercase;padding:2px 7px;border-radius:999px;border:1px solid var(--lilac);color:#5E5290;background:var(--lilac-soft);white-space:nowrap}
+.needs-pill.urgent{background:var(--lilac);color:var(--ink);border-color:var(--lilac);font-weight:500}
 .msg .preview{color:var(--slate);font-size:13.5px;margin-top:2px;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .msg .meta{text-align:right;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
 .msg .time{font-family:var(--mono);font-size:11px;color:var(--slate)}
@@ -309,7 +312,7 @@ footer a{color:var(--teal)}
      pt:'Bom dia Inês! Sim, o pequeno-almoço está incluído na sua reserva e é servido das 8:00 às 10:30 no terraço. Temos sempre opção vegetariana (ovos, fruta, pão da padaria do bairro, queijos). Até dia 20!\n\nCom os melhores cumprimentos,\nCasa Miradouro',
      en:'Good morning Inês! Yes, breakfast is included in your booking and is served 8:00–10:30 on the terrace. There is always a vegetarian option (eggs, fruit, bread from the local bakery, cheeses). See you on the 20th!\n\nBest regards,\nCasa Miradouro',
      decision:'auto', why:['Information request, booking verified.','Answer from the house guide.','Reply sent.'], ms:[540,1650,1950]},
-    {id:6, name:'Tom Hale', chan:'WhatsApp', time:'11:48', lang:'en', kind:'chat', phone:'+44 7••• ••• 331',
+    {id:6, name:'Tom Hale', chan:'WhatsApp', time:'11:48', lang:'en', kind:'chat', urgent:true, phone:'+44 7••• ••• 331',
      text:'There is water coming through the ceiling in room 5, dripping onto the bed. It\'s getting worse.',
      ref:'CM-2414', verify:{ok:true, line:'Booking matches · guest is in-house (room 5, 16–19 Sep).'},
      pt:'Bom dia Tom, lamentamos muito. Já avisámos a proprietária, que está a caminho. Por favor afaste as malas da zona molhada. Se quiser, o quarto 6 está livre esta noite e podemos mudá-lo já.\n\nCom os melhores cumprimentos,\nCasa Miradouro',
@@ -328,6 +331,7 @@ footer a{color:var(--teal)}
 
   function plusMinutes(t, add){ var p=t.split(':'), tot=(+p[0])*60+(+p[1])+add; return String(Math.floor(tot/60)%24).padStart(2,'0')+':'+String(tot%60).padStart(2,'0'); }
   function initials(n){ return n.split(' ').map(function(p){return p[0];}).join(''); }
+  function chanLabel(c){ return {'Booking inbox':'Booking','Email':'Email','WhatsApp':'WhatsApp','Channel Talk':'Channel Talk'}[c]||c; }
   function statusLabel(s){ return {new:'New', auto:'Auto-answered', esc:'Escalated', conf:'Confirmed'}[s]; }
 
   function renderLedger(){
@@ -344,11 +348,14 @@ footer a{color:var(--teal)}
     var newCount=0;
     MESSAGES.forEach(function(m){
       var s = state[m.id]||'new'; if(s==='new') newCount++;
+      var needs = m.decision==='esc' && s!=='conf';
       var li = document.createElement('li');
-      li.innerHTML = '<button class="msg" type="button" data-id="'+m.id+'" aria-current="'+(current===m.id)+'">'+
+      li.innerHTML = '<button class="msg'+(needs?' needs':'')+'" type="button" data-id="'+m.id+'" aria-current="'+(current===m.id)+'">'+
         '<div class="avatar">'+initials(m.name)+'</div>'+
-        '<div><div class="who">'+m.name+' <span class="chan">'+m.chan+'</span></div><div class="preview">'+m.text+'</div></div>'+
-        '<div class="meta"><span class="time">'+m.time+'</span><span class="status '+s+'">'+statusLabel(s)+'</span></div></button>';
+        '<div><div class="who">'+m.name+' <span class="chan">'+chanLabel(m.chan)+'</span></div><div class="preview">'+m.text+'</div></div>'+
+        '<div class="meta"><span class="time">'+m.time+'</span><span class="status '+s+'">'+statusLabel(s)+'</span>'+
+        (needs ? '<span class="needs-pill'+(m.urgent?' urgent':'')+'">'+(m.urgent?'Needs you now':'Needs you')+'</span>' : '')+
+        '</div></button>';
       list.appendChild(li);
     });
     $('count').textContent = MESSAGES.length+' messages · '+newCount+' new';

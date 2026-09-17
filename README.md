@@ -12,18 +12,19 @@ Live: enable GitHub Pages on this repo (Settings → Pages → Source: branch `m
 - **Draft** — a reply in the guest's own language (PT or EN, inferred from their message), with the other language behind a toggle. Written from the house guide and the booking record.
 - **Own channel** — the draft renders in the frame of the channel it came from: an email layout for email, a chat bubble for WhatsApp and Channel Talk, a reservation thread for the booking inbox. This page is the owner's view; the loop answers where the guest wrote.
 - **Decide** — a badge: `AUTO-ANSWERED` for routine requests, `ESCALATED TO OWNER` when a human must decide.
+- **Where you're needed, at a glance** — escalated messages carry a lilac edge and a `NEEDS YOU` pill in the list itself (filled, `NEEDS YOU NOW`, for the emergency). Auto-answered cards stay calm. Each card also names its channel.
 - **The human gate** — escalations sit in a "waiting for owner confirmation" state until the owner taps confirm. The demo has two:
   - a **water leak** (safety): the owner is phoned, the guest gets a holding reply immediately.
   - a **booking-date change** (commercial): availability is pre-checked, the reply is drafted and held until the owner confirms.
 
 ## The 90-second demo
 
-1. Open the page on a phone. Read the promise strip out loud.
+1. Open the page on a phone. Read the promise strip out loud. Before touching anything, point at the list: four calm cards, two marked **NEEDS YOU** with a lilac edge, one of them **NEEDS YOU NOW**. *"The loop absorbs the noise. The list shows only where you're needed."*
 2. Tap **Daniel Kessler** (wifi). Watch verify → draft → `AUTO-ANSWERED`. The reply is an email, in English, because that is how Daniel wrote. Toggle to PT. *"Routine, verified, answered, in the guest's language and channel."*
 3. Tap back, then **Tom Hale** (water leak). It escalates. Point at the pulsing gate. Tap **Owner confirms**. The follow-up reply appears. *"When it matters, a human decides. The guest is never left waiting."*
 4. Tap back, then **Marta Lopes** (date change). It escalates too, with availability already checked. *"The owner decides in one tap, with the work already done."*
 5. Open the **Bookings ledger** at the bottom. *"Nothing is invented. It only answers from what it can verify."*
-6. Point at the inbox: status pills now show what was answered, what was escalated, what was confirmed. **Reset demo** clears it.
+6. Point at the inbox: status pills now show what was answered, what was escalated, what was confirmed, and the NEEDS YOU marks are gone from what you confirmed. **Reset demo** clears it.
 
 ## Running it
 
